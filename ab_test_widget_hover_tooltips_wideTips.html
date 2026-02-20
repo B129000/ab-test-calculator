@@ -1,0 +1,191 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>A/B Test Significance Calculator (Web Widget)</title>
+  <style>
+    :root{
+      --bg:#f6f9fb; --ink:#15232b; --muted:#42525c; --brand:#214554; --card:#fff; --border:#ced7dd;
+      --accent:#0b6b44; --danger:#a40000; --focus:#2b8cff; --pill:#e6edf1; --accent-bg:#d5eddc; --danger-bg:#f9d7d6;
+    }
+    html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    .container{max-width:1040px;margin:24px auto;padding:0 16px}
+    header{background:var(--brand);color:#fff;border-radius:8px;padding:14px 16px;margin-bottom:16px}
+    header h1{margin:0;font-size:18px}
+
+    .grid{display:grid;gap:12px}
+    @media(min-width:860px){.grid{grid-template-columns:1fr 1fr}}
+
+    .card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+    .card h2{margin:0 0 8px 0;font-size:14px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+
+    /* Revert to original input sizing (not extra-wide, comfortable height) */
+    .inputs{display:grid;grid-template-columns:220px 1fr 1fr;gap:8px;align-items:center}
+    .inputs label{font-weight:600}
+    .inputs .group{grid-column:1/-1;margin-top:8px;padding:8px 10px;background:var(--pill);border-radius:6px;color:#2c3e48;font-weight:700}
+
+    input[type=number]{width:100%;padding:12px;border-radius:6px;border:1px solid var(--border);background:#fff;color:var(--ink)}
+    input[type=number]:focus{outline:3px solid var(--focus);border-color:var(--focus)}
+    input[type=number].err{border-color:var(--danger);background:#fff4f4}
+
+    .row{display:grid;grid-template-columns:240px 1fr 1fr;gap:12px;align-items:center;margin:6px 0}
+    .row .lbl{font-weight:700}
+    .mono{font-variant-numeric:tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace}
+
+    .summary{display:grid;grid-template-columns:220px 1fr;gap:10px}
+    .table{border-collapse:separate;border-spacing:0;width:100%;margin-top:6px}
+    .table th,.table td{border:1px solid var(--border);padding:10px 12px;vertical-align:top}
+    .table th{background:var(--brand);color:#fff;text-align:left;font-weight:700}
+
+    .ok{color:var(--accent)} .no{color:var(--danger)}
+    .footer{margin:18px 2px;color:var(--muted);font-size:14px}
+    .hr{height:1px;background:var(--border);margin:10px 0}
+    .btn{appearance:none;border:1px solid var(--border);background:#fff;border-radius:6px;padding:10px 12px;cursor:pointer}
+    .btn:hover{border-color:#b7c2c9} .btn:focus{outline:3px solid var(--focus)}
+
+    /* Keyword hover/focus tooltips (no ? icons) */
+    .tt{position:relative; border-bottom:1px dotted #8aa; cursor:help}
+    .tt:focus{outline:2px solid var(--focus)}
+    .tooltip{position:absolute; left:0; top:100%; margin-top:6px; background:#14212a; color:#fff; border-radius:6px; padding:10px 12px; max-width:560px; width:max-content; min-width:260px; font-size:14px; line-height:1.45; box-shadow:0 6px 18px rgba(0,0,0,.18); border:1px solid #0b1a22; z-index:20; display:none; white-space:normal}
+    .tooltip .title{font-weight:700; display:block; margin-bottom:4px}
+    .tooltip:before{content:""; position:absolute; left:12px; top:-6px; border:6px solid transparent; border-bottom-color:#0b1a22}
+    .tooltip:after{content:""; position:absolute; left:12px; top:-5px; border:5px solid transparent; border-bottom-color:#14212a}
+    .tooltip[data-show="true"]{display:block}
+    @media (max-width:520px){ .tooltip{max-width:90vw} }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header><h1>A/B Test Statistical Significance Calculator</h1></header>
+
+    <section class="card" aria-labelledby="inputs-h2">
+      <h2 id="inputs-h2">Inputs</h2>
+      <div class="inputs">
+        <div class="group">Version A (Control)</div>
+        <label for="visA"><span class="tt" tabindex="0" data-tip-title="Visitors" data-tip="Number of users who saw each version.">Visitors</span></label>
+        <input id="visA" name="visA" type="number" inputmode="numeric" min="0" step="1" value="500"/>
+        <div></div>
+
+        <label for="convA"><span class="tt" tabindex="0" data-tip-title="Conversions" data-tip="Number of users who completed the desired action (e.g., purchase, signup).">Conversions</span></label>
+        <input id="convA" name="convA" type="number" inputmode="numeric" min="0" step="1" value="49"/>
+        <div></div>
+
+        <div class="group">Version B</div>
+        <label for="visB"><span class="tt" tabindex="0" data-tip-title="Visitors" data-tip="Number of users who saw each version.">Visitors</span></label>
+        <input id="visB" name="visB" type="number" inputmode="numeric" min="0" step="1" value="500"/>
+        <div></div>
+
+        <label for="convB"><span class="tt" tabindex="0" data-tip-title="Conversions" data-tip="Number of users who completed the desired action (e.g., purchase, signup).">Conversions</span></label>
+        <input id="convB" name="convB" type="number" inputmode="numeric" min="0" step="1" value="50"/>
+        <div></div>
+      </div>
+
+      <div class="hr" role="separator" aria-hidden="true"></div>
+
+      <div class="row"><div class="lbl"><span class="tt" tabindex="0" data-tip-title="Conversion rate" data-tip="Conversions / Visitors (for each version). Shows the percent of visitors who converted.">Conversion Rate</span></div>
+        <div class="mono" id="rateA" aria-live="polite">–</div>
+        <div class="mono" id="rateB" aria-live="polite">–</div></div>
+      <div class="row"><div class="lbl"><span class="tt" tabindex="0" data-tip-title="Relative improvement" data-tip="How much higher Version B's conversion rate is compared to Version A, as a percentage.">% better than Version A</span></div>
+        <div class="mono">—</div>
+        <div class="mono" id="lift" aria-live="polite">–</div></div>
+    </section>
+
+    <section class="grid" style="margin-top:12px">
+      <div class="card" aria-labelledby="summary-h2">
+        <h2 id="summary-h2">Result Summary</h2>
+        <div class="summary">
+          <div class="lbl">Winner:</div><div id="winner" class="mono" aria-live="polite">–</div>
+          <div class="lbl">Improvement:</div><div id="improve" class="mono" aria-live="polite">–</div>
+          <div class="lbl"><span class="tt" tabindex="0" data-tip-title="Statistical significance" data-tip="At 95% confidence, a p-value below 0.05 suggests the difference is unlikely due to random variation.">Is it statistically significant?</span></div><div id="sig95" class="mono" aria-live="polite">–</div>
+          <div class="lbl">Recommendation:</div><div id="rec" class="mono" aria-live="polite">–</div>
+        </div>
+      </div>
+      <div class="card" aria-labelledby="stats-h2">
+        <h2 id="stats-h2">Statistics</h2>
+        <div class="summary">
+          <div class="lbl"><span class="tt" tabindex="0" data-tip-title="Pooled proportion (p̂)" data-tip="(Conversions A + Conversions B) / (Visitors A + Visitors B). Used in the two‑proportion z‑test.">Pooled proportion</span></div><div id="pooled" class="mono" aria-live="polite">–</div>
+          <div class="lbl"><span class="tt" tabindex="0" data-tip-title="Standard error (SE)" data-tip="SE = sqrt(p̂(1−p̂)(1/nA + 1/nB)). Measures expected random variation in the difference.">Standard Error</span></div><div id="se" class="mono" aria-live="polite">–</div>
+          <div class="lbl"><span class="tt" tabindex="0" data-tip-title="Z‑score" data-tip="(Rate B − Rate A) / SE. How large the observed difference is relative to expected random variation.">Z‑Score</span></div><div id="z" class="mono" aria-live="polite">–</div>
+          <div class="lbl"><span class="tt" tabindex="0" data-tip-title="Two‑tailed p‑value" data-tip="Probability of seeing a difference at least this extreme if there were truly no difference.">Two‑tailed p‑value</span></div><div id="p" class="mono" aria-live="polite">–</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:12px" aria-labelledby="interp-h2">
+      <h2 id="interp-h2">Results and Interpretation →</h2>
+      <table class="table" aria-describedby="interphelp">
+        <thead>
+          <tr>
+            <th scope="col" style="width:120px">Confidence</th>
+            <th scope="col" style="width:260px">Significant?</th>
+            <th scope="col">Interpretation</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <p id="interphelp" class="footer">Confidence describes how sure we want to be the difference isn’t random. Example: 95% confidence → we accept a 5% chance the observed difference is due to random variation.</p>
+    </section>
+
+    <div class="footer">
+      <button class="btn" id="reset">Reset to sample numbers</button>
+    </div>
+  </div>
+
+  <script>
+    // Hover/focus tooltips bound to any element with class 'tt'
+    function wireHoverTooltips(){
+      document.querySelectorAll('.tt').forEach(el=>{
+        let tip; const title = el.getAttribute('data-tip-title')||'Help';
+        const text = el.getAttribute('data-tip')||'';
+        const show = ()=>{ if(!tip){ tip = document.createElement('div'); tip.className='tooltip'; tip.innerHTML=`<span class='title'>${title}</span>${text}`; el.appendChild(tip);} tip.setAttribute('data-show','true'); };
+        const hide = ()=>{ if(tip){ tip.setAttribute('data-show','false'); } };
+        el.addEventListener('mouseenter', show); el.addEventListener('mouseleave', hide);
+        el.addEventListener('focus', show); el.addEventListener('blur', hide);
+        el.addEventListener('keydown', (e)=>{ if(e.key==='Escape') hide();});
+      });
+    }
+
+    const $ = (sel)=>document.querySelector(sel);
+    const fmtPct = (x, dp=2)=> isFinite(x) ? (100*x).toFixed(dp) + '%' : '—';
+
+    function phi(x){
+      const b1=0.319381530,b2=-0.356563782,b3=1.781477937,b4=-1.821255978,b5=1.330274429,p=0.2316419,c=0.39894228;
+      const t=1/(1+p*Math.abs(x)); const z=c*Math.exp(-x*x/2)*((((b5*t+b4)*t+b3)*t+b2)*t+b1)*t; const res=1-z; return x>=0?res:1-res;
+    }
+
+    function compute(){
+      const nA=Number($('#visA').value), xA=Number($('#convA').value), nB=Number($('#visB').value), xB=Number($('#convB').value);
+      const errA = xA>nA || nA<0 || xA<0; const errB = xB>nB || nB<0 || xB<0;
+      ['visA','convA','visB','convB'].forEach((id,i)=>{ const el=$('#'+id); const err = (i<2?errA:errB); el.classList.toggle('err', err);});
+      if(errA||errB){ ['#rateA','#rateB','#lift','#winner','#improve','#sig95','#rec','#pooled','#se','#z','#p'].forEach(id=>$(id).textContent='—'); $('#tbody').innerHTML=''; return; }
+
+      const pA = nA>0? xA/nA : NaN, pB = nB>0? xB/nB : NaN;
+      $('#rateA').textContent = fmtPct(pA); $('#rateB').textContent = fmtPct(pB);
+      const lift = (isFinite(pA)&&pA>0&&isFinite(pB)) ? (pB-pA)/pA : NaN; $('#lift').textContent = isFinite(lift)? (100*lift).toFixed(2)+'%' : '—';
+      const pooled = (nA+nB)>0? (xA+xB)/(nA+nB) : NaN; const se = (isFinite(pooled)&&pooled>0&&pooled<1&&nA>0&&nB>0)? Math.sqrt(pooled*(1-pooled)*(1/nA+1/nB)) : NaN;
+      const z = (isFinite(se)&&se>0&&isFinite(pA)&&isFinite(pB))? (pB - pA)/se : 0; const pval = isFinite(z)? 2*(1-phi(Math.abs(z))) : NaN;
+      $('#pooled').textContent = fmtPct(pooled); $('#se').textContent = isFinite(se)? se.toFixed(4) : '—'; $('#z').textContent = isFinite(z)? z.toFixed(2) : '—'; $('#p').textContent = isFinite(pval)? pval.toFixed(4) : '—';
+
+      const winner = (!isFinite(pA)||!isFinite(pB)||pA===pB)? 'Tie' : (pA>pB? 'Version A (Control)' : 'Version B');
+      $('#winner').textContent = winner; $('#improve').textContent = isFinite(lift)? (100*lift).toFixed(2)+'%' : '—';
+      const sig = isFinite(pval)&&pval<0.05; $('#sig95').innerHTML = sig? `<span class="ok">✓ Yes</span> (p = ${pval.toFixed(4)})` : `<span class="no">✗ No</span> (p = ${isFinite(pval)?pval.toFixed(4):'—'})`;
+      $('#rec').textContent = sig? 'Consider adopting the winner' : 'Need more data / Not enough evidence yet';
+
+      const tbody = $('#tbody'); tbody.innerHTML=''; const levels=[0.80,0.90,0.95,0.99];
+      for(const conf of levels){ const chance=1-conf; const significant = isFinite(pval)&&pval<chance; const who = (!isFinite(pA)||!isFinite(pB)||pA===pB)? 'Both versions currently have the same conversion rate.' : ((pA>pB)? 'Version A (Control) currently has a higher conversion rate than Version B.' : 'Version B currently has a higher conversion rate than Version A (Control).');
+        const sigText = significant? `At ${Math.round(conf*100)}% confidence, there is only about ${Math.round(chance*100)}% chance that the difference we see is due to random variation. That means the result is strong enough to trust, and it likely reflects a real difference between the versions. ${who}` : `At ${Math.round(conf*100)}% confidence, there is still about ${Math.round(chance*100)}% chance that the difference we see is due to random variation. That means the result is not strong enough, and we cannot be sure the versions truly perform differently.`;
+        const tr=document.createElement('tr'); const td1=document.createElement('td'); td1.textContent=`${Math.round(conf*100)}%`;
+        const td2=document.createElement('td'); td2.innerHTML = significant? `<span class="ok">✓ Significant at ${Math.round(conf*100)}% confidence</span>` : `<span class="no">✗ Not significant at ${Math.round(conf*100)}% confidence</span>`; const td3=document.createElement('td'); td3.textContent=sigText; tr.append(td1,td2,td3); tbody.appendChild(tr);
+      }
+    }
+
+    ['#visA','#convA','#visB','#convB'].forEach(id=>{ document.querySelector(id).addEventListener('input', compute);});
+    document.getElementById('reset').addEventListener('click', ()=>{ document.querySelector('#visA').value=500; document.querySelector('#convA').value=49; document.querySelector('#visB').value=500; document.querySelector('#convB').value=50; compute(); });
+
+    // Init
+    wireHoverTooltips(); compute();
+  </script>
+</body>
+</html>
