@@ -61,36 +61,60 @@
     <header><h1>A/B Test Statistical Significance Calculator</h1></header>
 
     <section class="card" aria-labelledby="inputs-h2">
-      <h2 id="inputs-h2">Inputs</h2>
-      <div class="inputs">
-        <div class="group">Version A (Control)</div>
-        <label for="visA"><span class="tt" tabindex="0" data-tip-title="Visitors" data-tip="Number of users who saw each version.">Visitors</span></label>
-        <input id="visA" name="visA" type="number" inputmode="numeric" min="0" step="1" value="500"/>
-        <div></div>
+  <h2 id="inputs-h2">Inputs</h2>
 
-        <label for="convA"><span class="tt" tabindex="0" data-tip-title="Conversions" data-tip="Number of users who completed the desired action (e.g., purchase, signup).">Conversions</span></label>
-        <input id="convA" name="convA" type="number" inputmode="numeric" min="0" step="1" value="49"/>
-        <div></div>
+  <div class="inputs">
+    <div class="group">Version A (Control)</div>
 
-        <div class="group">Version B</div>
-        <label for="visB"><span class="tt" tabindex="0" data-tip-title="Visitors" data-tip="Number of users who saw each version.">Visitors</span></label>
-        <input id="visB" name="visB" type="number" inputmode="numeric" min="0" step="1" value="500"/>
-        <div></div>
+    <label for="visA"><span class="tt" tabindex="0" data-tip-title="Visitors" data-tip="Number of users who saw each version.">Visitors</span></label>
+    <input id="visA" name="visA" type="number" inputmode="numeric" min="0" step="1" value="500"/>
+    <div></div>
 
-        <label for="convB"><span class="tt" tabindex="0" data-tip-title="Conversions" data-tip="Number of users who completed the desired action (e.g., purchase, signup).">Conversions</span></label>
-        <input id="convB" name="convB" type="number" inputmode="numeric" min="0" step="1" value="50"/>
-        <div></div>
+    <label for="convA"><span class="tt" tabindex="0" data-tip-title="Conversions" data-tip="Number of users who completed the desired action (e.g., purchase, signup).">Conversions</span></label>
+    <input id="convA" name="convA" type="number" inputmode="numeric" min="0" step="1" value="49"/>
+    <div></div>
+
+    <!-- Conversion rate, scoped to Version A -->
+    <div class="row">
+      <div class="lbl">
+        <span class="tt" tabindex="0" data-tip-title="Conversion rate" data-tip="Conversions / Visitors for Version A.">
+          Conversion Rate (A)
+        </span>
       </div>
+      <div class="mono" id="rateA" aria-live="polite">–</div>
+      <div></div>
+    </div>
 
-      <div class="hr" role="separator" aria-hidden="true"></div>
+    <div class="group">Version B</div>
 
-      <div class="row"><div class="lbl"><span class="tt" tabindex="0" data-tip-title="Conversion rate" data-tip="Conversions / Visitors (for each version). Shows the percent of visitors who converted.">Conversion Rate</span></div>
-        <div class="mono" id="rateA" aria-live="polite">–</div>
-        <div class="mono" id="rateB" aria-live="polite">–</div></div>
-      <div class="row"><div class="lbl"><span class="tt" tabindex="0" data-tip-title="Relative improvement" data-tip="How much higher Version B's conversion rate is compared to Version A, as a percentage.">% better than Version A</span></div>
-        <div class="mono">—</div>
-        <div class="mono" id="lift" aria-live="polite">–</div></div>
-    </section>
+    <label for="visB"><span class="tt" tabindex="0" data-tip-title="Visitors" data-tip="Number of users who saw each version.">Visitors</span></label>
+    <input id="visB" name="visB" type="number" inputmode="numeric" min="0" step="1" value="500"/>
+    <div></div>
+
+    <label for="convB"><span class="tt" tabindex="0" data-tip-title="Conversions" data-tip="Number of users who completed the desired action (e.g., purchase, signup).">Conversions</span></label>
+    <input id="convB" name="convB" type="number" inputmode="numeric" min="0" step="1" value="50"/>
+    <div></div>
+
+    <!-- Conversion rate, scoped to Version B -->
+    <div class="row">
+      <div class="lbl">
+        <span class="tt" tabindex="0" data-tip-title="Conversion rate" data-tip="Conversions / Visitors for Version B.">
+          Conversion Rate (B)
+        </span>
+      </div>
+      <div class="mono" id="rateB" aria-live="polite">–</div>
+      <div></div>
+    </div>
+  </div> <!-- /.inputs -->
+
+  <div class="hr" role="separator" aria-hidden="true"></div>
+
+  <div class="row">
+    <div class="lbl"><span class="tt" tabindex="0" data-tip-title="Relative improvement" data-tip="How much higher Version B's conversion rate is compared to Version A, as a percentage.">% better than Version A</span></div>
+    <div class="mono">—</div>
+    <div class="mono" id="lift" aria-live="polite">–</div>
+  </div>
+</section>
 
     <section class="grid" style="margin-top:12px">
       <div class="card" aria-labelledby="summary-h2">
