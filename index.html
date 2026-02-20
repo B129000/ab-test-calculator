@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -21,7 +20,7 @@
     .card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
     .card h2{margin:0 0 8px 0;font-size:14px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
 
-    /* Revert to original input sizing (not extra-wide, comfortable height) */
+    /* Inputs grid (label | input | spacer) */
     .inputs{display:grid;grid-template-columns:220px 1fr 1fr;gap:8px;align-items:center}
     .inputs label{font-weight:600}
     .inputs .group{grid-column:1/-1;margin-top:8px;padding:8px 10px;background:var(--pill);border-radius:6px;color:#2c3e48;font-weight:700}
@@ -48,7 +47,12 @@
     /* Keyword hover/focus tooltips (no ? icons) */
     .tt{position:relative; border-bottom:1px dotted #8aa; cursor:help}
     .tt:focus{outline:2px solid var(--focus)}
-    .tooltip{position:absolute; left:0; top:100%; margin-top:6px; background:#14212a; color:#fff; border-radius:6px; padding:10px 12px; max-width:560px; width:max-content; min-width:260px; font-size:14px; line-height:1.45; box-shadow:0 6px 18px rgba(0,0,0,.18); border:1px solid #0b1a22; z-index:20; display:none; white-space:normal}
+    .tooltip{
+      position:absolute; left:0; top:100%; margin-top:6px; background:#14212a; color:#fff;
+      border-radius:6px; padding:10px 12px; max-width:560px; width:max-content; min-width:260px;
+      font-size:14px; line-height:1.45; box-shadow:0 6px 18px rgba(0,0,0,.18); border:1px solid #0b1a22;
+      z-index:20; display:none; white-space:normal
+    }
     .tooltip .title{font-weight:700; display:block; margin-bottom:4px}
     .tooltip:before{content:""; position:absolute; left:12px; top:-6px; border:6px solid transparent; border-bottom-color:#0b1a22}
     .tooltip:after{content:""; position:absolute; left:12px; top:-5px; border:5px solid transparent; border-bottom-color:#14212a}
@@ -60,62 +64,69 @@
   <div class="container">
     <header><h1>A/B Test Statistical Significance Calculator</h1></header>
 
+    <!-- ===== Inputs ===== -->
     <section class="card" aria-labelledby="inputs-h2">
-  <h2 id="inputs-h2">Inputs</h2>
+      <h2 id="inputs-h2">Inputs</h2>
 
-  <div class="inputs">
-    <div class="group">Version A (Control)</div>
+      <div class="inputs">
+        <div class="group">Version A (Control)</div>
 
-    <label for="visA"><span class="tt" tabindex="0" data-tip-title="Visitors" data-tip="Number of users who saw each version.">Visitors</span></label>
-    <input id="visA" name="visA" type="number" inputmode="numeric" min="0" step="1" value="500"/>
-    <div></div>
+        <label for="visA"><span class="tt" tabindex="0" data-tip-title="Visitors" data-tip="Number of users who saw each version.">Visitors</span></label>
+        <input id="visA" name="visA" type="number" inputmode="numeric" min="0" step="1" value="500"/>
+        <div></div>
 
-    <label for="convA"><span class="tt" tabindex="0" data-tip-title="Conversions" data-tip="Number of users who completed the desired action (e.g., purchase, signup).">Conversions</span></label>
-    <input id="convA" name="convA" type="number" inputmode="numeric" min="0" step="1" value="49"/>
-    <div></div>
+        <label for="convA"><span class="tt" tabindex="0" data-tip-title="Conversions" data-tip="Number of users who completed the desired action (e.g., purchase, signup).">Conversions</span></label>
+        <input id="convA" name="convA" type="number" inputmode="numeric" min="0" step="1" value="49"/>
+        <div></div>
 
-    <!-- Conversion rate, scoped to Version A -->
-    <div class="row">
-      <div class="lbl">
-        <span class="tt" tabindex="0" data-tip-title="Conversion rate" data-tip="Conversions / Visitors for Version A.">
-          Conversion Rate (A)
-        </span>
+        <!-- Conversion rate, scoped to Version A -->
+        <div class="row">
+          <div class="lbl">
+            <span class="tt" tabindex="0" data-tip-title="Conversion rate" data-tip="Conversions / Visitors for Version A.">
+              Conversion Rate (A)
+            </span>
+          </div>
+          <div class="mono" id="rateA" aria-live="polite">–</div>
+          <div></div>
+        </div>
+
+        <div class="group">Version B</div>
+
+        <label for="visB"><span class="tt" tabindex="0" data-tip-title="Visitors" data-tip="Number of users who saw each version.">Visitors</span></label>
+        <input id="visB" name="visB" type="number" inputmode="numeric" min="0" step="1" value="500"/>
+        <div></div>
+
+        <label for="convB"><span class="tt" tabindex="0" data-tip-title="Conversions" data-tip="Number of users who completed the desired action (e.g., purchase, signup).">Conversions</span></label>
+        <input id="convB" name="convB" type="number" inputmode="numeric" min="0" step="1" value="50"/>
+        <div></div>
+
+        <!-- Conversion rate, scoped to Version B -->
+        <div class="row">
+          <div class="lbl">
+            <span class="tt" tabindex="0" data-tip-title="Conversion rate" data-tip="Conversions / Visitors for Version B.">
+              Conversion Rate (B)
+            </span>
+          </div>
+          <div class="mono" id="rateB" aria-live="polite">–</div>
+          <div></div>
+        </div>
+      </div> <!-- /.inputs -->
+
+      <div class="hr" role="separator" aria-hidden="true"></div>
+
+      <div class="row">
+        <div class="lbl">
+          <span class="tt" tabindex="0" data-tip-title="Relative improvement"
+                data-tip="How much higher Version B's conversion rate is compared to Version A, as a percentage.">
+            % better than Version A
+          </span>
+        </div>
+        <div class="mono">—</div>
+        <div class="mono" id="lift" aria-live="polite">–</div>
       </div>
-      <div class="mono" id="rateA" aria-live="polite">–</div>
-      <div></div>
-    </div>
+    </section>
 
-    <div class="group">Version B</div>
-
-    <label for="visB"><span class="tt" tabindex="0" data-tip-title="Visitors" data-tip="Number of users who saw each version.">Visitors</span></label>
-    <input id="visB" name="visB" type="number" inputmode="numeric" min="0" step="1" value="500"/>
-    <div></div>
-
-    <label for="convB"><span class="tt" tabindex="0" data-tip-title="Conversions" data-tip="Number of users who completed the desired action (e.g., purchase, signup).">Conversions</span></label>
-    <input id="convB" name="convB" type="number" inputmode="numeric" min="0" step="1" value="50"/>
-    <div></div>
-
-    <!-- Conversion rate, scoped to Version B -->
-    <div class="row">
-      <div class="lbl">
-        <span class="tt" tabindex="0" data-tip-title="Conversion rate" data-tip="Conversions / Visitors for Version B.">
-          Conversion Rate (B)
-        </span>
-      </div>
-      <div class="mono" id="rateB" aria-live="polite">–</div>
-      <div></div>
-    </div>
-  </div> <!-- /.inputs -->
-
-  <div class="hr" role="separator" aria-hidden="true"></div>
-
-  <div class="row">
-    <div class="lbl"><span class="tt" tabindex="0" data-tip-title="Relative improvement" data-tip="How much higher Version B's conversion rate is compared to Version A, as a percentage.">% better than Version A</span></div>
-    <div class="mono">—</div>
-    <div class="mono" id="lift" aria-live="polite">–</div>
-  </div>
-</section>
-
+    <!-- ===== Summary & Stats ===== -->
     <section class="grid" style="margin-top:12px">
       <div class="card" aria-labelledby="summary-h2">
         <h2 id="summary-h2">Result Summary</h2>
@@ -126,6 +137,7 @@
           <div class="lbl">Recommendation:</div><div id="rec" class="mono" aria-live="polite">–</div>
         </div>
       </div>
+
       <div class="card" aria-labelledby="stats-h2">
         <h2 id="stats-h2">Statistics</h2>
         <div class="summary">
@@ -137,13 +149,26 @@
       </div>
     </section>
 
+    <!-- ===== Interpretation Table ===== -->
     <section class="card" style="margin-top:12px" aria-labelledby="interp-h2">
       <h2 id="interp-h2">Results and Interpretation →</h2>
       <table class="table" aria-describedby="interphelp">
         <thead>
           <tr>
-            <th scope="col" style="width:120px">Confidence</th>
-            <th scope="col" style="width:260px">Significant?</th>
+            <th scope="col" style="width:120px">
+              <span class="tt" tabindex="0"
+                    data-tip-title="Confidence level"
+                    data-tip="How sure we want to be that the observed difference isn’t just random. 95% confidence means we accept a 5% chance the difference is due to random variation.">
+                Confidence
+              </span>
+            </th>
+            <th scope="col" style="width:260px">
+              <span class="tt" tabindex="0"
+                    data-tip-title="Statistical significance"
+                    data-tip="At a given confidence level, a result is ‘significant’ if the p‑value is below the threshold (e.g., p < 0.05 at 95% confidence). It suggests the observed difference is unlikely due to random variation.">
+                Significant?
+              </span>
+            </th>
             <th scope="col">Interpretation</th>
           </tr>
         </thead>
@@ -174,6 +199,7 @@
     const $ = (sel)=>document.querySelector(sel);
     const fmtPct = (x, dp=2)=> isFinite(x) ? (100*x).toFixed(dp) + '%' : '—';
 
+    // Standard normal CDF (Abramowitz–Stegun approx)
     function phi(x){
       const b1=0.319381530,b2=-0.356563782,b3=1.781477937,b4=-1.821255978,b5=1.330274429,p=0.2316419,c=0.39894228;
       const t=1/(1+p*Math.abs(x)); const z=c*Math.exp(-x*x/2)*((((b5*t+b4)*t+b3)*t+b2)*t+b1)*t; const res=1-z; return x>=0?res:1-res;
@@ -190,7 +216,11 @@
       const lift = (isFinite(pA)&&pA>0&&isFinite(pB)) ? (pB-pA)/pA : NaN; $('#lift').textContent = isFinite(lift)? (100*lift).toFixed(2)+'%' : '—';
       const pooled = (nA+nB)>0? (xA+xB)/(nA+nB) : NaN; const se = (isFinite(pooled)&&pooled>0&&pooled<1&&nA>0&&nB>0)? Math.sqrt(pooled*(1-pooled)*(1/nA+1/nB)) : NaN;
       const z = (isFinite(se)&&se>0&&isFinite(pA)&&isFinite(pB))? (pB - pA)/se : 0; const pval = isFinite(z)? 2*(1-phi(Math.abs(z))) : NaN;
-      $('#pooled').textContent = fmtPct(pooled); $('#se').textContent = isFinite(se)? se.toFixed(4) : '—'; $('#z').textContent = isFinite(z)? z.toFixed(2) : '—'; $('#p').textContent = isFinite(pval)? pval.toFixed(4) : '—';
+
+      $('#pooled').textContent = fmtPct(pooled);
+      $('#se').textContent = isFinite(se)? se.toFixed(4) : '—';
+      $('#z').textContent = isFinite(z)? z.toFixed(2) : '—';
+      $('#p').textContent = isFinite(pval)? pval.toFixed(4) : '—';
 
       const winner = (!isFinite(pA)||!isFinite(pB)||pA===pB)? 'Tie' : (pA>pB? 'Version A (Control)' : 'Version B');
       $('#winner').textContent = winner; $('#improve').textContent = isFinite(lift)? (100*lift).toFixed(2)+'%' : '—';
@@ -198,10 +228,24 @@
       $('#rec').textContent = sig? 'Consider adopting the winner' : 'Need more data / Not enough evidence yet';
 
       const tbody = $('#tbody'); tbody.innerHTML=''; const levels=[0.80,0.90,0.95,0.99];
-      for(const conf of levels){ const chance=1-conf; const significant = isFinite(pval)&&pval<chance; const who = (!isFinite(pA)||!isFinite(pB)||pA===pB)? 'Both versions currently have the same conversion rate.' : ((pA>pB)? 'Version A (Control) currently has a higher conversion rate than Version B.' : 'Version B currently has a higher conversion rate than Version A (Control).');
-        const sigText = significant? `At ${Math.round(conf*100)}% confidence, there is only about ${Math.round(chance*100)}% chance that the difference we see is due to random variation. That means the result is strong enough to trust, and it likely reflects a real difference between the versions. ${who}` : `At ${Math.round(conf*100)}% confidence, there is still about ${Math.round(chance*100)}% chance that the difference we see is due to random variation. That means the result is not strong enough, and we cannot be sure the versions truly perform differently.`;
-        const tr=document.createElement('tr'); const td1=document.createElement('td'); td1.textContent=`${Math.round(conf*100)}%`;
-        const td2=document.createElement('td'); td2.innerHTML = significant? `<span class="ok">✓ Significant at ${Math.round(conf*100)}% confidence</span>` : `<span class="no">✗ Not significant at ${Math.round(conf*100)}% confidence</span>`; const td3=document.createElement('td'); td3.textContent=sigText; tr.append(td1,td2,td3); tbody.appendChild(tr);
+      for(const conf of levels){
+        const chance=1-conf;
+        const significant = isFinite(pval)&&pval<chance;
+        const who = (!isFinite(pA)||!isFinite(pB)||pA===pB)
+          ? 'Both versions currently have the same conversion rate.'
+          : ((pA>pB)? 'Version A (Control) currently has a higher conversion rate than Version B.' : 'Version B currently has a higher conversion rate than Version A (Control).');
+
+        const sigText = significant
+          ? `At ${Math.round(conf*100)}% confidence, there is only about ${Math.round(chance*100)}% chance that the difference we see is due to random variation. That means the result is strong enough to trust, and it likely reflects a real difference between the versions. ${who}`
+          : `At ${Math.round(conf*100)}% confidence, there is still about ${Math.round(chance*100)}% chance that the difference we see is due to random variation. That means the result is not strong enough, and we cannot be sure the versions truly perform differently.`;
+
+        const tr=document.createElement('tr');
+        const td1=document.createElement('td'); td1.textContent=`${Math.round(conf*100)}%`;
+        const td2=document.createElement('td'); td2.innerHTML = significant
+          ? `<span class="ok">✓ Significant at ${Math.round(conf*100)}% confidence</span>`
+          : `<span class="no">✗ Not significant at ${Math.round(conf*100)}% confidence</span>`;
+        const td3=document.createElement('td'); td3.textContent=sigText;
+        tr.append(td1,td2,td3); tbody.appendChild(tr);
       }
     }
 
