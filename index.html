@@ -139,7 +139,7 @@
     /* ─── Card ───────────────────────────────────────── */
     .card {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); box-shadow: var(--shadow-card); overflow: hidden;
+      border-radius: var(--radius-lg); box-shadow: var(--shadow-card); overflow: visible;
       transition: border-color var(--tr), background var(--tr);
     }
     .card:hover { border-color: var(--border-hover); }
@@ -158,7 +158,7 @@
     /* ─── Version cards ──────────────────────────────── */
     .version-card {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card);
+      border-radius: var(--radius-lg); overflow: visible; box-shadow: var(--shadow-card);
       transition: border-color var(--tr), background var(--tr);
     }
     .version-card:hover { border-color: var(--border-hover); }
@@ -212,10 +212,10 @@
     .lift-value.negative { color: var(--red); }
 
     /* ─── Stat grid ──────────────────────────────────── */
-    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border-radius: var(--radius-md); overflow: hidden; }
-    .stat-cell { background: var(--surface-2); padding: 14px 16px; transition: background var(--tr); }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border-radius: var(--radius-md); overflow: visible; }
+    .stat-cell { background: var(--surface-2); padding: 14px 16px; transition: background var(--tr); position: relative; }
     .stat-cell:hover { background: var(--surface-3); }
-    .stat-cell-label { font-size: 11px; font-weight: 500; color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; margin-bottom: 5px; }
+    .stat-cell-label { font-size: 11px; font-weight: 500; color: var(--ink-3); letter-spacing: .02em; margin-bottom: 5px; }
     .stat-cell-value { font-family: var(--mono); font-size: 15px; font-weight: 500; color: var(--ink); }
 
     /* ─── Winner block ───────────────────────────────── */
@@ -241,7 +241,7 @@
 
     /* ─── Interpretation table ───────────────────────── */
     .interp-table { width: 100%; border-collapse: collapse; }
-    .interp-table thead th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); border-bottom: 1px solid var(--border); }
+    .interp-table thead th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: .04em; color: var(--ink-3); border-bottom: 1px solid var(--border); }
     .interp-table tbody tr { border-bottom: 1px solid var(--border); transition: background var(--tr); }
     .interp-table tbody tr:last-child { border-bottom: none; }
     .interp-table tbody tr:hover { background: var(--surface-2); }
@@ -331,7 +331,7 @@
               <span data-i18n-en>Visitors</span><span data-i18n-fr>Visiteurs</span>
             </span>
           </label>
-          <input id="visA" name="visA" type="number" inputmode="numeric" min="0" step="1" value="500"/>
+          <input id="visA" name="visA" type="number" inputmode="numeric" min="0" step="1" value="0"/>
         </div>
         <div class="field">
           <label class="field-label" for="convA">
@@ -341,7 +341,7 @@
               <span data-i18n-en>Conversions</span><span data-i18n-fr>Conversions</span>
             </span>
           </label>
-          <input id="convA" name="convA" type="number" inputmode="numeric" min="0" step="1" value="49"/>
+          <input id="convA" name="convA" type="number" inputmode="numeric" min="0" step="1" value="0"/>
         </div>
         <div class="rate-badge">
           <span class="rate-badge-label" data-i18n-en>Conv. rate</span>
@@ -368,7 +368,7 @@
               <span data-i18n-en>Visitors</span><span data-i18n-fr>Visiteurs</span>
             </span>
           </label>
-          <input id="visB" name="visB" type="number" inputmode="numeric" min="0" step="1" value="500"/>
+          <input id="visB" name="visB" type="number" inputmode="numeric" min="0" step="1" value="0"/>
         </div>
         <div class="field">
           <label class="field-label" for="convB">
@@ -378,7 +378,7 @@
               <span data-i18n-en>Conversions</span><span data-i18n-fr>Conversions</span>
             </span>
           </label>
-          <input id="convB" name="convB" type="number" inputmode="numeric" min="0" step="1" value="50"/>
+          <input id="convB" name="convB" type="number" inputmode="numeric" min="0" step="1" value="0"/>
         </div>
         <div class="rate-badge">
           <span class="rate-badge-label" data-i18n-en>Conv. rate</span>
@@ -770,8 +770,8 @@
   ══════════════════════════════════════════════════════ */
   ['#visA','#convA','#visB','#convB'].forEach(id => $(id).addEventListener('input', compute));
   $('#reset').addEventListener('click', ()=>{
-    $('#visA').value=500; $('#convA').value=49;
-    $('#visB').value=500; $('#convB').value=50;
+    $('#visA').value=0; $('#convA').value=0;
+    $('#visB').value=0; $('#convB').value=0;
     compute();
   });
 
