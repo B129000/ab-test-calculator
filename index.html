@@ -284,6 +284,24 @@
     /* ─── Flash animation ────────────────────────────── */
     @keyframes flash { 0%{opacity:.25} 100%{opacity:1} }
     .updated { animation: flash .35s ease; }
+
+    /* ─── Bayesian ───────────────────────────────────── */
+    .card-icon.purple { background: rgba(167,139,250,.12); color: #a78bfa; }
+    .bayes-info {
+      font-size: 12px; color: var(--ink-3);
+      margin-bottom: 16px; padding: 10px 14px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); line-height: 1.55;
+      transition: background var(--tr), border-color var(--tr);
+    }
+    .bayes-chart-wrap {
+      border-radius: var(--radius-md); overflow: hidden;
+      border: 1px solid var(--border); background: var(--surface-2);
+      margin-bottom: 12px;
+      transition: border-color var(--tr), background var(--tr);
+    }
+    #bayes-chart { width: 100%; height: 180px; display: block; }
+    .bayes-caption { font-size: 11px; color: var(--ink-3); line-height: 1.5; }
   </style>
 </head>
 <body>
@@ -557,6 +575,97 @@
     </div>
   </section>
 
+  <!-- ════ Bayesian Analysis ════ -->
+  <section class="section card">
+    <div class="card-header">
+      <div class="card-icon purple" style="font-family:var(--mono);font-weight:700;font-size:14px">β</div>
+      <span class="card-title" data-i18n-en>Bayesian Analysis</span>
+      <span class="card-title" data-i18n-fr>Analyse Bayésienne</span>
+      <span style="margin-left:auto;font-size:11px;color:var(--ink-3);background:var(--surface-3);padding:2px 8px;border-radius:100px;flex-shrink:0;transition:background var(--tr)">
+        <span data-i18n-en>Works with few visitors</span>
+        <span data-i18n-fr>Fonctionne avec peu de visiteurs</span>
+      </span>
+    </div>
+    <div class="card-body">
+      <div class="bayes-info">
+        <span class="tt" tabindex="0"
+          data-tip-title-en="Why use this with small audiences?"
+          data-tip-en="The standard calculator needs hundreds or thousands of visitors before results are trustworthy. This one works even with 10–20 visitors, because it runs 20,000 simulated reruns of your experiment and counts how often each version wins. Instead of a confusing number, you get a plain answer like '73% chance Version B is the real winner' — so you can make a call even with limited data."
+          data-tip-title-fr="Pourquoi l'utiliser avec peu de visiteurs ?"
+          data-tip-fr="Le calculateur standard nécessite des centaines ou des milliers de visiteurs pour être fiable. Celui-ci fonctionne avec aussi peu que 10–20 visiteurs, en simulant 20 000 réexécutions de votre expérience pour compter combien de fois chaque version gagne. Au lieu d'un chiffre abstrait, vous obtenez une réponse claire : « 73 % de chance que la version B soit vraiment meilleure ».">
+          <span data-i18n-en>No minimum visitors needed · Works even with 10–20 conversions · Gives a plain "which version is probably better?" answer</span>
+          <span data-i18n-fr>Aucun minimum de visiteurs · Fonctionne dès 10–20 conversions · Répond clairement « quelle version est probablement meilleure ? »</span>
+        </span>
+      </div>
+      <div class="stat-grid" style="margin-bottom:16px">
+        <div class="stat-cell">
+          <div class="stat-cell-label">
+            <span class="tt" tabindex="0"
+              data-tip-title-en="Chance Version B is the real winner"
+              data-tip-en="We ran 20,000 simulated reruns of your experiment. This number is how often Version B came out ahead. Think of it like flipping a weighted coin — if B wins 87% of reruns, there's an 87% chance it's genuinely better. Above 90–95% and you can feel confident acting on it. Around 50% means no clear winner yet."
+              data-tip-title-fr="Probabilité que la version B soit vraiment meilleure"
+              data-tip-fr="Nous avons simulé 20 000 réexécutions de votre expérience. Ce chiffre représente la proportion des fois où la version B a gagné. Si B gagne 87 % des simulations, il y a 87 % de chance qu'elle soit réellement meilleure. Au-dessus de 90–95 %, vous pouvez agir avec confiance. Autour de 50 % signifie qu'il n'y a pas encore de gagnant clair.">
+              <span data-i18n-en>Chance B wins</span>
+              <span data-i18n-fr>Chance que B gagne</span>
+            </span>
+          </div>
+          <div class="stat-cell-value" id="bayes-prob">–</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-cell-label">
+            <span class="tt" tabindex="0"
+              data-tip-title-en="Best guess at how much better B is"
+              data-tip-en="Our single best estimate of how much Version B's conversion rate differs from Version A's. Positive means B is likely converting more visitors. Because data is limited, this is a rough centre of a range — check the 'low end' and 'high end' cells below for the full picture."
+              data-tip-title-fr="Meilleure estimation de l'écart entre B et A"
+              data-tip-fr="Notre meilleure estimation unique de la différence de taux de conversion entre la version B et la version A. Un nombre positif signifie que B convertit probablement plus de visiteurs. Comme les données sont limitées, consultez les bornes basse et haute ci-dessous pour avoir le tableau complet.">
+              <span data-i18n-en>Best guess improvement</span>
+              <span data-i18n-fr>Amélioration estimée</span>
+            </span>
+          </div>
+          <div class="stat-cell-value" id="bayes-elift">–</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-cell-label">
+            <span class="tt" tabindex="0"
+              data-tip-title-en="The low end of the realistic improvement range"
+              data-tip-en="We're 95% confident the true difference between B and A is somewhere between this number and the 'high end' value. If both numbers are positive, B is almost certainly better by at least this much. If this number is negative, there's a real chance A could be equal or better."
+              data-tip-title-fr="Borne basse de la plage d'amélioration réaliste"
+              data-tip-fr="Nous sommes certains à 95% que la vraie différence entre B et A se situe entre ce chiffre et la borne haute. Si les deux chiffres sont positifs, B est presque certainement meilleur d'au moins ce montant. Si ce chiffre est négatif, A pourrait être aussi bon, voire meilleur.">
+              <span data-i18n-en>Improvement — low end</span>
+              <span data-i18n-fr>Amélioration — borne basse</span>
+            </span>
+          </div>
+          <div class="stat-cell-value" id="bayes-ci-lo">–</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-cell-label">
+            <span class="tt" tabindex="0"
+              data-tip-title-en="The high end of the realistic improvement range"
+              data-tip-en="Even if Version B is probably winning, this tells you the ceiling of how much better it could realistically be. A small high-end number means B's advantage is modest at best — useful to know before betting big on the result."
+              data-tip-title-fr="Borne haute de la plage d'amélioration réaliste"
+              data-tip-fr="Même si la version B est probablement en tête, cela indique le plafond de son avantage réaliste. Un petit chiffre haut signifie que l'avantage de B est modeste au mieux — utile à savoir avant de se fier entièrement au résultat.">
+              <span data-i18n-en>Improvement — high end</span>
+              <span data-i18n-fr>Amélioration — borne haute</span>
+            </span>
+          </div>
+          <div class="stat-cell-value" id="bayes-ci-hi">–</div>
+        </div>
+      </div>
+      <div class="result-row" style="padding-bottom:16px">
+        <span class="result-key">
+          <span data-i18n-en>What this means</span>
+          <span data-i18n-fr>Ce que ça signifie</span>
+        </span>
+        <span id="bayes-verdict" aria-live="polite">–</span>
+      </div>
+      <div class="bayes-chart-wrap">
+        <canvas id="bayes-chart" role="img" aria-label="Posterior distribution of conversion rate difference B minus A"></canvas>
+      </div>
+      <p class="bayes-caption" data-i18n-en>Each bar shows how often Version B outperformed Version A across 20,000 simulated scenarios. Green = B was ahead, Red = A was ahead. Brighter bars are the most likely outcomes. Dashed lines show the realistic range of difference.</p>
+      <p class="bayes-caption" data-i18n-fr>Chaque barre montre combien de fois la version B a surpassé la version A sur 20 000 scénarios simulés. Vert = B était en tête, Rouge = A était en tête. Les barres plus vives sont les résultats les plus probables. Les tirets délimitent la plage réaliste de différence.</p>
+    </div>
+  </section>
+
   <!-- ════ Footer ════ -->
   <div class="footer-row">
     <p class="footer-note">
@@ -602,7 +711,14 @@
       rowNot:   (c, chance) =>
         `At ${c}% confidence, there is still about ${chance}% chance that the difference we see is due to random variation. `+
         `That means the result is not strong enough, and we cannot be sure the versions truly perform differently.`,
-      themeLbl: isDark => isDark ? 'Light' : 'Dark',
+      themeLbl:     isDark => isDark ? 'Light' : 'Dark',
+      bayesStrongB: p => `Version B is almost certainly better (${p} chance)`,
+      bayesModB:    p => `Version B is probably better (${p} chance)`,
+      bayesWeakB:   p => `Version B has a slight edge (${p} chance)`,
+      bayesTie:     p => `Too close to call — collect more data (${p} chance B wins)`,
+      bayesWeakA:   p => `Version A has a slight edge (${p} chance B wins)`,
+      bayesModA:    p => `Version A is probably better (${p} chance B wins)`,
+      bayesStrongA: p => `Version A is almost certainly better (${p} chance B wins)`,
     },
     fr: {
       tie:          'Égalité',
@@ -627,7 +743,14 @@
       rowNot:   (c, chance) =>
         `À ${c} % de confiance, il y a encore environ ${chance} % de chance que la différence observée soit due à la variation aléatoire. `+
         `Le résultat n'est pas assez solide et nous ne pouvons pas affirmer avec certitude que les versions se comportent différemment.`,
-      themeLbl: isDark => isDark ? 'Clair' : 'Sombre',
+      themeLbl:     isDark => isDark ? 'Clair' : 'Sombre',
+      bayesStrongB: p => `La version B est presque certainement meilleure (${p} de chance)`,
+      bayesModB:    p => `La version B est probablement meilleure (${p} de chance)`,
+      bayesWeakB:   p => `La version B a un léger avantage (${p} de chance)`,
+      bayesTie:     p => `Trop serré pour conclure — collectez plus de données (${p} de chance pour B)`,
+      bayesWeakA:   p => `La version A a un léger avantage (${p} de chance pour B)`,
+      bayesModA:    p => `La version A est probablement meilleure (${p} de chance pour B)`,
+      bayesStrongA: p => `La version A est presque certainement meilleure (${p} de chance pour B)`,
     }
   };
 
@@ -698,6 +821,183 @@
   }
 
   /* ══════════════════════════════════════════════════════
+     Bayesian helpers — Beta-Binomial model
+     Prior: Beta(1,1) = uniform (no prior knowledge)
+  ══════════════════════════════════════════════════════ */
+  let _bmSpare = null;
+  function _normalSample() {
+    if (_bmSpare !== null) { const v = _bmSpare; _bmSpare = null; return v; }
+    let u, v, sq;
+    do { u = Math.random()*2-1; v = Math.random()*2-1; sq = u*u+v*v; } while (sq >= 1 || sq === 0);
+    const m = Math.sqrt(-2*Math.log(sq)/sq);
+    _bmSpare = v*m; return u*m;
+  }
+
+  function _sampleGamma(a) {
+    if (a < 1) return _sampleGamma(1+a) * Math.pow(Math.random(), 1/a);
+    const d = a - 1/3, c = 1/Math.sqrt(9*d);
+    for (;;) {
+      let x, v;
+      do { x = _normalSample(); v = 1+c*x; } while (v <= 0);
+      v = v*v*v;
+      const u = Math.random();
+      if (u < 1 - 0.0331*x*x*x*x) return d*v;
+      if (Math.log(u) < 0.5*x*x + d*(1 - v + Math.log(v))) return d*v;
+    }
+  }
+
+  function _sampleBeta(a, b) { const x = _sampleGamma(a), y = _sampleGamma(b); return x/(x+y); }
+
+  let _bayesResult = null;
+
+  function _cssRgb(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+  function computeBayes() {
+    const nA = Number($('#visA').value), xA = Number($('#convA').value);
+    const nB = Number($('#visB').value), xB = Number($('#convB').value);
+
+    // Posterior parameters: Beta(conversions + 1, non-conversions + 1)
+    const aA = xA + 1, bA = Math.max(0, nA - xA) + 1;
+    const aB = xB + 1, bB = Math.max(0, nB - xB) + 1;
+
+    const N = 20000;
+    const diffs = new Float64Array(N);
+    let bWins = 0;
+    for (let i = 0; i < N; i++) {
+      const sA = _sampleBeta(aA, bA), sB = _sampleBeta(aB, bB);
+      diffs[i] = sB - sA;
+      if (sB > sA) bWins++;
+    }
+    diffs.sort();
+
+    const pBbeatsA = bWins / N;
+    const ci95Lo   = diffs[Math.floor(0.025 * N)];
+    const ci95Hi   = diffs[Math.floor(0.975 * N)];
+    let   meanDiff = 0; for (const d of diffs) meanDiff += d; meanDiff /= N;
+
+    _bayesResult = { pBbeatsA, ci95Lo, ci95Hi, meanDiff, diffs };
+
+    // Update stat cells
+    const fmtDiff = v => (v*100 >= 0 ? '+' : '') + (v*100).toFixed(2) + '%';
+    const pStr = (pBbeatsA * 100).toFixed(1) + '%';
+    $('#bayes-prob').textContent   = pStr;          flash($('#bayes-prob'));
+    $('#bayes-elift').textContent  = fmtDiff(meanDiff); flash($('#bayes-elift'));
+    $('#bayes-ci-lo').textContent  = fmtDiff(ci95Lo);   flash($('#bayes-ci-lo'));
+    $('#bayes-ci-hi').textContent  = fmtDiff(ci95Hi);   flash($('#bayes-ci-hi'));
+
+    // Verdict
+    const S = s(); const pct = pBbeatsA * 100;
+    let vText, vHtml;
+    if      (pct >= 95) { vText = S.bayesStrongB(pStr); vHtml = `<span class="sig-pill yes">${vText}</span>`; }
+    else if (pct >= 80) { vText = S.bayesModB(pStr);    vHtml = `<span style="color:var(--green);font-size:12px;font-weight:600">${vText}</span>`; }
+    else if (pct >= 60) { vText = S.bayesWeakB(pStr);   vHtml = `<span style="color:var(--ink-2);font-size:12px">${vText}</span>`; }
+    else if (pct >= 40) { vText = S.bayesTie(pStr);     vHtml = `<span style="color:var(--ink-3);font-size:12px">${vText}</span>`; }
+    else if (pct >= 20) { vText = S.bayesWeakA(pStr);   vHtml = `<span style="color:var(--ink-2);font-size:12px">${vText}</span>`; }
+    else if (pct >=  5) { vText = S.bayesModA(pStr);    vHtml = `<span style="color:var(--red);font-size:12px;font-weight:600">${vText}</span>`; }
+    else                { vText = S.bayesStrongA(pStr);  vHtml = `<span class="sig-pill no">${vText}</span>`; }
+    $('#bayes-verdict').innerHTML = vHtml;
+
+    drawBayesChart(_bayesResult);
+  }
+
+  function drawBayesChart(result) {
+    const canvas = document.getElementById('bayes-chart');
+    if (!canvas || !result) return;
+    const W = canvas.offsetWidth || 600, H = canvas.offsetHeight || 180;
+    if (!W || !H) return;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width  = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    const { diffs, ci95Lo, ci95Hi, pBbeatsA } = result;
+    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+    const green  = isDark ? [52,211,153]  : [5,150,105];
+    const red    = isDark ? [248,113,113] : [220,38,38];
+    const brand  = isDark ? [79,142,247]  : [37,99,235];
+    const rgba   = ([r,g,b], a) => `rgba(${r},${g},${b},${a})`;
+    const ink2   = _cssRgb('--ink-2');
+    const ink3   = _cssRgb('--ink-3');
+    const bdr    = _cssRgb('--border');
+
+    // Layout
+    const pad = { top: 28, right: 22, bottom: 34, left: 14 };
+    const pw = W - pad.left - pad.right, ph = H - pad.top - pad.bottom;
+    const baseY = pad.top + ph;
+
+    // Histogram bins
+    const nBins = 60;
+    const dMin = diffs[0], dMax = diffs[diffs.length-1];
+    const ext  = Math.max((dMax - dMin) * 0.03, 0.005);
+    const xMin = dMin - ext, xMax = dMax + ext;
+    const binW = (xMax - xMin) / nBins;
+    const counts = new Int32Array(nBins);
+    for (const d of diffs) {
+      const bi = Math.min(Math.floor((d - xMin) / binW), nBins - 1);
+      if (bi >= 0) counts[bi]++;
+    }
+    const maxC = Math.max(...counts, 1);
+    const toX  = v => pad.left + (v - xMin) / (xMax - xMin) * pw;
+    const toY  = c => pad.top + ph - (c / maxC) * ph;
+
+    // Draw bars
+    for (let i = 0; i < nBins; i++) {
+      const bMid  = xMin + (i + 0.5) * binW;
+      const inCI  = bMid >= ci95Lo && bMid <= ci95Hi;
+      const color = bMid >= 0 ? green : red;
+      ctx.fillStyle = rgba(color, inCI ? 0.78 : 0.25);
+      const x1 = toX(xMin + i * binW), x2 = toX(xMin + (i+1) * binW);
+      ctx.fillRect(x1, toY(counts[i]), Math.max(x2 - x1 - 0.8, 0.8), baseY - toY(counts[i]));
+    }
+
+    // X-axis line
+    ctx.beginPath(); ctx.strokeStyle = bdr; ctx.lineWidth = 1;
+    ctx.moveTo(pad.left, baseY); ctx.lineTo(pad.left + pw, baseY); ctx.stroke();
+
+    // Zero line
+    const x0 = toX(0);
+    if (x0 >= pad.left && x0 <= pad.left + pw) {
+      ctx.beginPath(); ctx.strokeStyle = ink2; ctx.lineWidth = 1.5;
+      ctx.moveTo(x0, pad.top + 4); ctx.lineTo(x0, baseY); ctx.stroke();
+    }
+
+    // CI dashed lines
+    ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
+    for (const v of [ci95Lo, ci95Hi]) {
+      const xv = toX(v);
+      if (xv < pad.left || xv > pad.left + pw) continue;
+      ctx.beginPath(); ctx.strokeStyle = rgba(brand, 0.65);
+      ctx.moveTo(xv, pad.top + 10); ctx.lineTo(xv, baseY); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    // X-axis labels — only the three meaningful values: CI lower, zero, CI upper
+    const fmtL = v => v === 0 ? '0' : ((v*100 >= 0 ? '+' : '') + (v*100).toFixed(1) + '%');
+    ctx.fillStyle = ink3; ctx.textBaseline = 'top'; ctx.font = `9.5px 'DM Mono', monospace`;
+    const ticks = [[ci95Lo, 'center'], [0, 'center'], [ci95Hi, 'center']];
+    for (const [v, align] of ticks) {
+      const xv = toX(v);
+      if (xv < pad.left + 2 || xv > pad.left + pw - 2) continue;
+      ctx.textAlign = align;
+      ctx.fillText(fmtL(v), xv, baseY + 5);
+    }
+
+    // Top annotations — area label on left, win-chance on right (opposite sides, no overlap)
+    const lblLang = lang();
+    ctx.textBaseline = 'top';
+    ctx.font = `italic 10px 'DM Sans', sans-serif`;
+    if (x0 > pad.left + 52) {
+      ctx.textAlign = 'left'; ctx.fillStyle = rgba(red, 0.55);
+      ctx.fillText(lblLang === 'fr' ? '← A en tête' : '← A winning', pad.left + 4, pad.top + 4);
+    }
+    ctx.font = `600 11px 'DM Sans', sans-serif`;
+    ctx.textAlign = 'right';
+    ctx.fillStyle = pBbeatsA >= 0.5 ? rgba(green, 0.9) : rgba(red, 0.9);
+    ctx.fillText((pBbeatsA * 100).toFixed(1) + (lblLang === 'fr' ? '% de chance que B gagne' : '% chance B wins'), pad.left + pw, pad.top + 4);
+  }
+
+  /* ══════════════════════════════════════════════════════
      Compute — LOGIC UNCHANGED; display strings use i18n
   ══════════════════════════════════════════════════════ */
   function compute(){
@@ -707,9 +1007,11 @@
     ['visA','convA','visB','convB'].forEach((id,i) => $('#'+id).classList.toggle('err', i<2?errA:errB));
 
     if(errA||errB){
-      ['#rateA','#rateB','#lift','#winner','#improve','#sig95','#rec','#pooled','#se','#z','#p']
-        .forEach(id => $(id).textContent='—');
+      ['#rateA','#rateB','#lift','#winner','#improve','#sig95','#rec','#pooled','#se','#z','#p',
+       '#bayes-prob','#bayes-elift','#bayes-ci-lo','#bayes-ci-hi']
+        .forEach(id => $(id) && ($(id).textContent='—'));
       $('#winner-desc').textContent = s().awaitDesc;
+      $('#bayes-verdict').innerHTML = '–';
       $('#tbody').innerHTML=''; return;
     }
 
@@ -769,6 +1071,7 @@
       const td3=document.createElement('td'); td3.textContent=interp;
       tr.append(td1,td2,td3); tbody.appendChild(tr);
     }
+    computeBayes();
   }
 
   /* ══════════════════════════════════════════════════════
@@ -786,6 +1089,17 @@
   ══════════════════════════════════════════════════════ */
   wireHoverTooltips();
   compute();
+
+  // Redraw Bayesian chart when theme or language changes
+  $('#theme-toggle').addEventListener('click', () => {
+    if (_bayesResult) requestAnimationFrame(() => drawBayesChart(_bayesResult));
+  });
+  $('#lang-toggle').addEventListener('click', () => {
+    if (_bayesResult) requestAnimationFrame(() => drawBayesChart(_bayesResult));
+  });
+  window.addEventListener('resize', () => {
+    if (_bayesResult) requestAnimationFrame(() => drawBayesChart(_bayesResult));
+  });
 </script>
 </body>
 </html>
