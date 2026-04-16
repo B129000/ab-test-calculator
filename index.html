@@ -676,7 +676,7 @@
       <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M1 4c1.5-2.5 4-4 7-4a7 7 0 1 1-7 7"/><polyline points="1,1 1,4 4,4"/>
       </svg>
-      <span data-i18n-en>Reset to sample data</span>
+      <span data-i18n-en>Reset</span>
       <span data-i18n-fr>Réinitialiser les données</span>
     </button>
   </div>
@@ -852,9 +852,21 @@
 
   function _cssRgb(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
 
+  function _clearBayes() {
+    ['#bayes-prob','#bayes-elift','#bayes-ci-lo','#bayes-ci-hi']
+      .forEach(id => $(id).textContent = '–');
+    $('#bayes-verdict').innerHTML = '–';
+    _bayesResult = null;
+    const canvas = document.getElementById('bayes-chart');
+    if (canvas) { const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); }
+  }
+
   function computeBayes() {
     const nA = Number($('#visA').value), xA = Number($('#convA').value);
     const nB = Number($('#visB').value), xB = Number($('#convB').value);
+
+    // Wait until both groups have at least one visitor entered
+    if (nA === 0 || nB === 0) { _clearBayes(); return; }
 
     // Posterior parameters: Beta(conversions + 1, non-conversions + 1)
     const aA = xA + 1, bA = Math.max(0, nA - xA) + 1;
