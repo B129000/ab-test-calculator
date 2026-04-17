@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>A/B Test Significance Calculator</title>
+  <title>A/B Test Calculator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -193,6 +193,7 @@
       border-radius: var(--radius-md); color: var(--ink);
       font-family: var(--mono); font-size: 14px;
       transition: border-color var(--tr), box-shadow var(--tr), background var(--tr);
+      appearance: textfield;
       -moz-appearance: textfield;
     }
     input[type=number]::-webkit-inner-spin-button,
@@ -312,10 +313,10 @@
     <header class="header">
       <div class="header-badge" data-i18n-en>Live Calculator</div>
       <div class="header-badge" data-i18n-fr>Calculateur en direct</div>
-      <h1 data-i18n-en>A/B Test Significance Calculator</h1>
-      <h1 data-i18n-fr>Calculateur de significativité de test A/B</h1>
-      <p data-i18n-en>Two-proportion z-test · 80 / 90 / 95 / 99% confidence · Real-time results</p>
-      <p data-i18n-fr>Test z à deux proportions · Confiance 80 / 90 / 95 / 99 % · Résultats en temps réel</p>
+      <h1 data-i18n-en>A/B Test Calculator</h1>
+      <h1 data-i18n-fr>Calculateur de test A/B</h1>
+      <p data-i18n-en>Enter your data to see which version performs better</p>
+      <p data-i18n-fr>Entrez vos données pour voir quelle version performe le mieux</p>
     </header>
 
     <div class="controls">
@@ -417,10 +418,10 @@
   <div class="section lift-strip">
     <span class="lift-label">
       <span class="tt" tabindex="0"
-        data-tip-title-en="Relative lift"         data-tip-en="How much higher (or lower) Version B's conversion rate is compared to Version A, expressed as a percentage. Formula: (Rate B − Rate A) / Rate A."
-        data-tip-title-fr="Amélioration relative" data-tip-fr="Dans quelle mesure le taux de conversion de la version B est plus élevé (ou plus bas) que celui de la version A, exprimé en pourcentage. Formule : (Taux B − Taux A) / Taux A.">
-        <span data-i18n-en>Relative improvement of B over A</span>
-        <span data-i18n-fr>Amélioration relative de B par rapport à A</span>
+        data-tip-title-en="How much better is B than A?"         data-tip-en="How much higher or lower Version B's conversion rate is compared to Version A."
+        data-tip-title-fr="Dans quelle mesure B est-il meilleur que A ?" data-tip-fr="Dans quelle mesure le taux de conversion de la version B est plus élevé ou plus bas que celui de la version A.">
+        <span data-i18n-en>How much better is Version B than Version A?</span>
+        <span data-i18n-fr>Dans quelle mesure la version B est-elle meilleure que la version A ?</span>
       </span>
     </span>
     <span class="lift-value" id="lift" aria-live="polite">–</span>
@@ -433,7 +434,7 @@
     <div class="card">
       <div class="card-header">
         <div class="card-icon blue">▲</div>
-        <span class="card-title" data-i18n-en>Result Summary</span>
+        <span class="card-title" data-i18n-en>Results summary</span>
         <span class="card-title" data-i18n-fr>Résumé des résultats</span>
       </div>
       <div class="card-body">
@@ -447,8 +448,8 @@
         <div class="result-row">
           <span class="result-key">
             <span class="tt" tabindex="0"
-              data-tip-title-en="Relative improvement" data-tip-en="How much higher or lower Version B performs relative to Version A."
-              data-tip-title-fr="Amélioration relative" data-tip-fr="Dans quelle mesure la version B performe mieux ou moins bien que la version A.">
+              data-tip-title-en="How much better is B?" data-tip-en="How much higher or lower Version B performs compared to Version A."
+              data-tip-title-fr="Dans quelle mesure B est-il meilleur ?" data-tip-fr="Dans quelle mesure la version B performe mieux ou moins bien que la version A.">
               <span data-i18n-en>Improvement</span><span data-i18n-fr>Amélioration</span>
             </span>
           </span>
@@ -457,10 +458,10 @@
         <div class="result-row">
           <span class="result-key">
             <span class="tt" tabindex="0"
-              data-tip-title-en="Statistical significance" data-tip-en="At 95% confidence, a p-value below 0.05 suggests the difference is unlikely due to random variation."
-              data-tip-title-fr="Significativité statistique" data-tip-fr="À 95 % de confiance, une valeur p inférieure à 0,05 indique que la différence est peu probable due à la variation aléatoire.">
-              <span data-i18n-en>Significant at 95%?</span>
-              <span data-i18n-fr>Significatif à 95 % ?</span>
+              data-tip-title-en="Is the result reliable?" data-tip-en="At 95% confidence, a reliable result means there is less than a 5% chance the difference between versions is due to chance."
+              data-tip-title-fr="Le résultat est-il fiable ?" data-tip-fr="À 95 % de confiance, un résultat fiable signifie qu'il y a moins de 5 % de chance que la différence soit due au hasard.">
+              <span data-i18n-en>Reliable at 95% confidence?</span>
+              <span data-i18n-fr>Fiable à 95 % de confiance ?</span>
             </span>
           </span>
           <span id="sig95" aria-live="polite">–</span>
@@ -479,7 +480,7 @@
     <div class="card">
       <div class="card-header">
         <div class="card-icon gray">∑</div>
-        <span class="card-title" data-i18n-en>Test Statistics</span>
+        <span class="card-title" data-i18n-en>Test statistics</span>
         <span class="card-title" data-i18n-fr>Statistiques du test</span>
       </div>
       <div class="card-body">
@@ -487,10 +488,10 @@
           <div class="stat-cell">
             <div class="stat-cell-label">
               <span class="tt" tabindex="0"
-                data-tip-title-en="Pooled proportion (p̂)" data-tip-en="(Conversions A + Conversions B) / (Visitors A + Visitors B). Used as the null-hypothesis proportion in the two-proportion z-test."
-                data-tip-title-fr="Proportion groupée (p̂)" data-tip-fr="(Conversions A + Conversions B) / (Visiteurs A + Visiteurs B). Utilisée comme proportion sous l'hypothèse nulle dans le test z à deux proportions.">
-                <span data-i18n-en>Pooled proportion</span>
-                <span data-i18n-fr>Proportion groupée</span>
+                data-tip-title-en="Combined conversion rate" data-tip-en="The overall conversion rate across both versions combined. Used as the baseline in the calculation."
+                data-tip-title-fr="Taux de conversion combiné" data-tip-fr="Le taux de conversion global des deux versions combinées. Utilisé comme référence dans le calcul.">
+                <span data-i18n-en>Combined rate</span>
+                <span data-i18n-fr>Taux combiné</span>
               </span>
             </div>
             <div class="stat-cell-value" id="pooled" aria-live="polite">–</div>
@@ -498,10 +499,10 @@
           <div class="stat-cell">
             <div class="stat-cell-label">
               <span class="tt" tabindex="0"
-                data-tip-title-en="Standard error (SE)" data-tip-en="SE = √(p̂(1−p̂)(1/nA + 1/nB)). Measures expected random variation in the difference between two proportions."
-                data-tip-title-fr="Erreur standard (ES)"  data-tip-fr="ES = √(p̂(1−p̂)(1/nA + 1/nB)). Mesure la variation aléatoire attendue dans la différence entre deux proportions.">
-                <span data-i18n-en>Standard error</span>
-                <span data-i18n-fr>Erreur standard</span>
+                data-tip-title-en="Expected variation" data-tip-en="How much the difference between the two versions could vary by chance. A smaller value means the results are more precise."
+                data-tip-title-fr="Variation attendue"  data-tip-fr="Dans quelle mesure la différence entre les deux versions pourrait varier par hasard. Une valeur plus petite indique des résultats plus précis.">
+                <span data-i18n-en>Expected variation</span>
+                <span data-i18n-fr>Variation attendue</span>
               </span>
             </div>
             <div class="stat-cell-value" id="se" aria-live="polite">–</div>
@@ -509,8 +510,8 @@
           <div class="stat-cell">
             <div class="stat-cell-label">
               <span class="tt" tabindex="0"
-                data-tip-title-en="Z‑score"  data-tip-en="(Rate B − Rate A) / SE. Describes how many standard errors the observed difference is from zero."
-                data-tip-title-fr="Score Z"   data-tip-fr="(Taux B − Taux A) / ES. Indique combien d'erreurs standard sépare la différence observée de zéro.">
+                data-tip-title-en="Z-score"  data-tip-en="A number that measures how far apart the two versions' rates are. A larger number (positive or negative) means a bigger difference."
+                data-tip-title-fr="Score Z"   data-tip-fr="Un chiffre qui mesure l'écart entre les taux des deux versions. Un chiffre plus grand (positif ou négatif) indique une différence plus grande.">
                 <span data-i18n-en>Z‑score</span>
                 <span data-i18n-fr>Score Z</span>
               </span>
@@ -520,10 +521,10 @@
           <div class="stat-cell">
             <div class="stat-cell-label">
               <span class="tt" tabindex="0"
-                data-tip-title-en="Two‑tailed p‑value" data-tip-en="Probability of observing a difference at least this large by chance if there were truly no difference between versions."
-                data-tip-title-fr="Valeur p bilatérale"  data-tip-fr="Probabilité d'observer une différence au moins aussi grande par hasard s'il n'y avait vraiment aucune différence entre les versions.">
-                <span data-i18n-en>Two‑tailed p‑value</span>
-                <span data-i18n-fr>Valeur p bilatérale</span>
+                data-tip-title-en="p-value" data-tip-en="The probability that the difference between versions is due to chance. A lower p-value means the result is more reliable. Below 0.05 is generally considered reliable."
+                data-tip-title-fr="Valeur p"  data-tip-fr="La probabilité que la différence entre les versions soit due au hasard. Une valeur p plus basse signifie un résultat plus fiable. En dessous de 0,05 est généralement considéré fiable.">
+                <span data-i18n-en>p-value</span>
+                <span data-i18n-fr>Valeur p</span>
               </span>
             </div>
             <div class="stat-cell-value" id="p" aria-live="polite">–</div>
@@ -537,8 +538,8 @@
   <section class="section card">
     <div class="card-header">
       <div class="card-icon green">⊕</div>
-      <span class="card-title" data-i18n-en>Interpretation by Confidence Level</span>
-      <span class="card-title" data-i18n-fr>Interprétation par niveau de confiance</span>
+      <span class="card-title" data-i18n-en>How reliable are your results?</span>
+      <span class="card-title" data-i18n-fr>Vos résultats sont-ils fiables ?</span>
     </div>
     <div style="overflow-x:auto">
       <table class="interp-table" aria-describedby="interphelp">
@@ -546,16 +547,16 @@
           <tr>
             <th scope="col">
               <span class="tt" tabindex="0"
-                data-tip-title-en="Confidence level" data-tip-en="How certain we want to be that the observed difference isn't random. 95% confidence means we accept at most a 5% chance the result is due to chance."
-                data-tip-title-fr="Niveau de confiance" data-tip-fr="À quel point nous voulons être certains que la différence observée n'est pas aléatoire. Une confiance de 95 % signifie que nous acceptons au plus 5 % de chance que le résultat soit dû au hasard.">
-                <span data-i18n-en>Confidence</span><span data-i18n-fr>Confiance</span>
+                data-tip-title-en="Confidence level" data-tip-en="How certain you want to be before acting on results. At 95% confidence, you accept a 5% chance the difference is due to chance."
+                data-tip-title-fr="Niveau de confiance" data-tip-fr="À quel point vous voulez être certain avant d'agir sur les résultats. À 95 % de confiance, vous acceptez 5 % de chance que la différence soit due au hasard.">
+                <span data-i18n-en>Confidence level</span><span data-i18n-fr>Niveau de confiance</span>
               </span>
             </th>
             <th scope="col">
               <span class="tt" tabindex="0"
-                data-tip-title-en="Statistical significance" data-tip-en="A result is 'significant' at a given confidence level if the p‑value is below the corresponding threshold (e.g. p < 0.05 for 95%)."
-                data-tip-title-fr="Significativité statistique" data-tip-fr="Un résultat est « significatif » à un niveau de confiance donné si la valeur p est inférieure au seuil correspondant (ex. p < 0,05 pour 95 %).">
-                <span data-i18n-en>Significant?</span><span data-i18n-fr>Significatif ?</span>
+                data-tip-title-en="Is the result reliable?" data-tip-en="A result is reliable at a given confidence level if the p-value is below the threshold (e.g. below 0.05 for 95% confidence)."
+                data-tip-title-fr="Le résultat est-il fiable ?" data-tip-fr="Un résultat est fiable à un niveau de confiance donné si la valeur p est inférieure au seuil (ex. inférieure à 0,05 pour 95 % de confiance).">
+                <span data-i18n-en>Reliable?</span><span data-i18n-fr>Fiable ?</span>
               </span>
             </th>
             <th scope="col">
@@ -569,8 +570,8 @@
     </div>
     <div style="padding:14px 16px;border-top:1px solid var(--border)">
       <p id="interphelp" style="font-size:12px;color:var(--ink-3);line-height:1.55">
-        <span data-i18n-en>Confidence describes how sure we want to be that the difference isn't random. Example: 95% confidence → we accept a 5% chance the observed difference is due to random variation.</span>
-        <span data-i18n-fr>Le niveau de confiance décrit à quel point nous voulons être certains que la différence n'est pas aléatoire. Exemple : confiance à 95 % → nous acceptons 5 % de probabilité que la différence observée soit due à la variation aléatoire.</span>
+        <span data-i18n-en>Confidence level: how sure you want to be before acting on results. At 95% confidence, you accept a 5% chance the difference is due to chance.</span>
+        <span data-i18n-fr>Niveau de confiance : à quel point vous voulez être certain avant d'agir sur les résultats. À 95 % de confiance, vous acceptez 5 % de chance que la différence soit due au hasard.</span>
       </p>
     </div>
   </section>
@@ -579,8 +580,8 @@
   <section class="section card">
     <div class="card-header">
       <div class="card-icon purple" style="font-family:var(--mono);font-weight:700;font-size:14px">β</div>
-      <span class="card-title" data-i18n-en>Bayesian Analysis</span>
-      <span class="card-title" data-i18n-fr>Analyse Bayésienne</span>
+      <span class="card-title" data-i18n-en>Bayesian analysis</span>
+      <span class="card-title" data-i18n-fr>Analyse bayésienne</span>
       <span style="margin-left:auto;font-size:11px;color:var(--ink-3);background:var(--surface-3);padding:2px 8px;border-radius:100px;flex-shrink:0;transition:background var(--tr)">
         <span data-i18n-en>Works with few visitors</span>
         <span data-i18n-fr>Fonctionne avec peu de visiteurs</span>
@@ -661,22 +662,22 @@
       <div class="bayes-chart-wrap">
         <canvas id="bayes-chart" role="img" aria-label="Posterior distribution of conversion rate difference B minus A"></canvas>
       </div>
-      <p class="bayes-caption" data-i18n-en>Each bar shows how often Version B outperformed Version A across 20,000 simulated scenarios. Green = B was ahead, Red = A was ahead. Brighter bars are the most likely outcomes. Dashed lines show the realistic range of difference.</p>
-      <p class="bayes-caption" data-i18n-fr>Chaque barre montre combien de fois la version B a surpassé la version A sur 20 000 scénarios simulés. Vert = B était en tête, Rouge = A était en tête. Les barres plus vives sont les résultats les plus probables. Les tirets délimitent la plage réaliste de différence.</p>
+      <p class="bayes-caption" data-i18n-en>Each bar shows how often Version B beat Version A across 20,000 simulated runs. Green = B ahead, Red = A ahead. Dashed lines show the likely range of difference.</p>
+      <p class="bayes-caption" data-i18n-fr>Chaque barre montre combien de fois la version B a battu la version A sur 20 000 simulations. Vert = B en tête, Rouge = A en tête. Les tirets délimitent la plage probable de différence.</p>
     </div>
   </section>
 
   <!-- ════ Footer ════ -->
   <div class="footer-row">
     <p class="footer-note">
-      <span data-i18n-en>This calculator uses a two-proportion z-test. Results are for informational purposes. Always consider practical significance alongside statistical significance.</span>
-      <span data-i18n-fr>Ce calculateur utilise un test z à deux proportions. Les résultats sont fournis à titre indicatif. Tenez toujours compte de la signification pratique en parallèle de la signification statistique.</span>
+      <span data-i18n-en>Results are for information only. Always consider real-world impact alongside test results before making decisions.</span>
+      <span data-i18n-fr>Les résultats sont fournis à titre indicatif uniquement. Tenez toujours compte de l'impact réel en plus des résultats du test avant de prendre des décisions.</span>
     </p>
     <button class="btn-reset" id="reset">
       <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M1 4c1.5-2.5 4-4 7-4a7 7 0 1 1-7 7"/><polyline points="1,1 1,4 4,4"/>
       </svg>
-      <span data-i18n-en>Reset</span>
+      <span data-i18n-en>Reset data</span>
       <span data-i18n-fr>Réinitialiser les données</span>
     </button>
   </div>
@@ -692,25 +693,25 @@
       tie:          'Tie',
       vA:           'Version A (Control)',
       vB:           'Version B',
-      awaitDesc:    'Awaiting results',
+      awaitDesc:    'Enter data above to see results',
       higherRate:   p => `${p}% higher conversion rate`,
       lowerRate:    p => `${p}% lower conversion rate`,
       equalRate:    'Equal conversion rates',
-      sigYes:       'Significant',
-      sigNo:        'Not significant',
-      adoptWinner:  'Consider adopting the winner',
+      sigYes:       'Reliable',
+      sigNo:        'Not yet reliable',
+      adoptWinner:  'Consider using the better version',
       moreData:     'Collect more data',
-      tsigYes:      c => `Significant at ${c}%`,
-      tsigNo:       ()=> 'Not significant',
+      tsigYes:      c => `Reliable at ${c}%`,
+      tsigNo:       ()=> 'Not yet reliable',
       whoA:         'Version A (Control) currently has a higher conversion rate than Version B.',
       whoB:         'Version B currently has a higher conversion rate than Version A (Control).',
       whoTie:       'Both versions currently have the same conversion rate.',
       rowSig:   (c, chance, who) =>
-        `At ${c}% confidence, there is only about ${chance}% chance that the difference we see is due to random variation. `+
-        `That means the result is strong enough to trust, and it likely reflects a real difference between the versions. ${who}`,
+        `At ${c}% confidence, only about ${chance}% chance the difference is due to chance. `+
+        `The result is reliable and likely reflects a real difference between the versions. ${who}`,
       rowNot:   (c, chance) =>
-        `At ${c}% confidence, there is still about ${chance}% chance that the difference we see is due to random variation. `+
-        `That means the result is not strong enough, and we cannot be sure the versions truly perform differently.`,
+        `At ${c}% confidence, there is still about ${chance}% chance the difference is due to chance. `+
+        `Collect more data before deciding.`,
       themeLbl:     isDark => isDark ? 'Light' : 'Dark',
       bayesStrongB: p => `Version B is almost certainly better (${p} chance)`,
       bayesModB:    p => `Version B is probably better (${p} chance)`,
@@ -724,25 +725,25 @@
       tie:          'Égalité',
       vA:           'Version A (Témoin)',
       vB:           'Version B',
-      awaitDesc:    'En attente des résultats',
+      awaitDesc:    'Entrez vos données ci-dessus pour voir les résultats',
       higherRate:   p => `Taux de conversion ${p} % plus élevé`,
       lowerRate:    p => `Taux de conversion ${p} % plus bas`,
       equalRate:    'Taux de conversion identiques',
-      sigYes:       'Significatif',
-      sigNo:        'Non significatif',
-      adoptWinner:  "Envisager d'adopter le gagnant",
+      sigYes:       'Fiable',
+      sigNo:        'Pas encore fiable',
+      adoptWinner:  "Envisager d'utiliser la meilleure version",
       moreData:     'Collecter davantage de données',
-      tsigYes:      c => `Significatif à ${c} %`,
-      tsigNo:       ()=> 'Non significatif',
+      tsigYes:      c => `Fiable à ${c} %`,
+      tsigNo:       ()=> 'Pas encore fiable',
       whoA:         'La version A (Témoin) a actuellement un taux de conversion plus élevé que la version B.',
       whoB:         'La version B a actuellement un taux de conversion plus élevé que la version A (Témoin).',
       whoTie:       'Les deux versions ont actuellement le même taux de conversion.',
       rowSig:   (c, chance, who) =>
-        `À ${c} % de confiance, il n'y a qu'environ ${chance} % de chance que la différence observée soit due à la variation aléatoire. `+
-        `Le résultat est donc assez solide pour être fiable et reflète probablement une vraie différence entre les versions. ${who}`,
+        `À ${c} % de confiance, seulement environ ${chance} % de chance que la différence soit due au hasard. `+
+        `Le résultat est fiable et reflète probablement une vraie différence entre les versions. ${who}`,
       rowNot:   (c, chance) =>
-        `À ${c} % de confiance, il y a encore environ ${chance} % de chance que la différence observée soit due à la variation aléatoire. `+
-        `Le résultat n'est pas assez solide et nous ne pouvons pas affirmer avec certitude que les versions se comportent différemment.`,
+        `À ${c} % de confiance, il y a encore environ ${chance} % de chance que la différence soit due au hasard. `+
+        `Collectez plus de données avant de décider.`,
       themeLbl:     isDark => isDark ? 'Clair' : 'Sombre',
       bayesStrongB: p => `La version B est presque certainement meilleure (${p} de chance)`,
       bayesModB:    p => `La version B est probablement meilleure (${p} de chance)`,
