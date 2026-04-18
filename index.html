@@ -1,134 +1,73 @@
 <!doctype html>
-<html lang="en" data-theme="dark" data-lang="en">
+<html lang="en" data-lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>A/B Test Calculator</title>
+  <title>Canada.ca Analytics</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    /* ─── Dark theme (default) ───────────────────────── */
-    :root, [data-theme="dark"] {
-      --bg:           #0d0f12;
-      --surface:      #13161b;
-      --surface-2:    #191d24;
-      --surface-3:    #1f242d;
-      --border:       rgba(255,255,255,.07);
-      --border-hover: rgba(255,255,255,.13);
-      --ink:          #e8eaed;
-      --ink-2:        #9aa3b0;
-      --ink-3:        #5c6470;
-      --brand:        #4f8ef7;
-      --brand-dim:    rgba(79,142,247,.12);
-      --brand-glow:   rgba(79,142,247,.25);
-      --green:        #34d399;
-      --green-dim:    rgba(52,211,153,.12);
-      --red:          #f87171;
-      --red-dim:      rgba(248,113,113,.12);
-      --focus:        rgba(79,142,247,.5);
-      --shadow-card:  0 1px 3px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.3);
-      --tooltip-bg:   #1a1f28;
-      --tooltip-bdr:  rgba(255,255,255,.1);
-      --tooltip-ink:        #9aa3b0;
-      --tooltip-ink-strong: #e8eaed;
-      --glow-1:       rgba(79,142,247,.08);
-      --glow-2:       rgba(52,211,153,.05);
-    }
-
-    /* ─── Light theme ────────────────────────────────── */
-    [data-theme="light"] {
-      --bg:           #f4f6f9;
+    :root {
+      --bg:           #f2f4f7;
       --surface:      #ffffff;
-      --surface-2:    #f8f9fb;
-      --surface-3:    #eef0f5;
-      --border:       rgba(0,0,0,.08);
-      --border-hover: rgba(0,0,0,.15);
+      --surface-2:    #f7f8fa;
+      --surface-3:    #edf0f4;
+      --border:       #dde1e8;
+      --border-hover: #b8becb;
       --ink:          #111827;
       --ink-2:        #4b5563;
-      --ink-3:        #9ca3af;
-      --brand:        #2563eb;
-      --brand-dim:    rgba(37,99,235,.09);
-      --brand-glow:   rgba(37,99,235,.2);
-      --green:        #059669;
-      --green-dim:    rgba(5,150,105,.09);
+      --ink-3:        #6b7280;
+      --brand:        #1a56db;
+      --brand-dim:    rgba(26,86,219,.07);
+      --green:        #047857;
+      --green-dim:    rgba(4,120,87,.07);
       --red:          #dc2626;
-      --red-dim:      rgba(220,38,38,.09);
-      --focus:        rgba(37,99,235,.3);
-      --shadow-card:  0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.07);
-      --tooltip-bg:   #ffffff;
-      --tooltip-bdr:  rgba(0,0,0,.18);
-      --tooltip-ink:        #4b5563;
-      --tooltip-ink-strong: #111827;
-      --glow-1:       rgba(37,99,235,.05);
-      --glow-2:       rgba(5,150,105,.04);
-    }
-
-    /* ─── Shared tokens ──────────────────────────────── */
-    :root {
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 14px;
+      --focus:        rgba(26,86,219,.25);
+      --shadow-card:  0 1px 3px rgba(0,0,0,.07), 0 2px 8px rgba(0,0,0,.05);
+      --canada-red:   #ab192d;
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
       --font:      'DM Sans', system-ui, sans-serif;
       --mono:      'DM Mono', ui-monospace, monospace;
-      --tr:        160ms cubic-bezier(.2,.8,.4,1);
+      --tr:        140ms cubic-bezier(.2,.8,.4,1);
     }
 
-    /* ─── Reset ──────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       background: var(--bg); color: var(--ink);
-      font-family: var(--font); font-size: 15px; line-height: 1.6;
+      font-family: var(--font); font-size: 18px; line-height: 1.6;
       min-height: 100vh; -webkit-font-smoothing: antialiased;
-      transition: background var(--tr), color var(--tr);
-    }
-    body::before {
-      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background:
-        radial-gradient(ellipse 80% 50% at 20% -10%, var(--glow-1) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 85% 110%, var(--glow-2) 0%, transparent 55%);
     }
 
-    /* ─── Layout ─────────────────────────────────────── */
-    .container { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; padding: 32px 20px 60px; }
-
-    /* ─── Top bar ────────────────────────────────────── */
-    .top-bar { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 36px; flex-wrap: wrap; }
-    .header { flex: 1; min-width: 0; }
-    .header-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: var(--brand-dim); border: 1px solid rgba(79,142,247,.25);
-      border-radius: 100px; padding: 4px 12px;
-      font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--brand);
-      margin-bottom: 14px; transition: background var(--tr), color var(--tr);
-      width: fit-content;
+    /* ── Site bar ── */
+    .site-bar {
+      background: var(--surface);
+      border-top: 4px solid var(--canada-red);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 200;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
     }
-    [data-theme="light"] .header-badge { border-color: rgba(37,99,235,.2); }
-    .header-badge::before {
-      content: ''; width: 6px; height: 6px; border-radius: 50%;
-      background: var(--brand); box-shadow: 0 0 6px var(--brand);
-      animation: pulse 2.5s ease infinite;
+    .site-bar-inner {
+      padding: 0 40px;
+      height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
     }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-    .header h1 { font-size: 26px; font-weight: 700; letter-spacing: -.02em; color: var(--ink); margin-bottom: 6px; }
-    .header p  { color: var(--ink-2); font-size: 14px; }
+    .site-wordmark { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .site-wordmark-img { height: 28px; width: auto; display: block; flex-shrink: 0; }
+    .site-name-divider { width: 1px; height: 16px; background: var(--border); flex-shrink: 0; }
+    .site-name-secondary { font-size: 15px; font-weight: 400; color: var(--ink-2); white-space: nowrap; }
 
-    /* ─── Controls ───────────────────────────────────── */
-    .controls { display: flex; align-items: center; gap: 8px; flex-shrink: 0; padding-top: 4px; }
+    /* ── Controls ── */
+    .controls { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
     .toggle-btn {
-      display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px;
+      display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
       background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md);
-      color: var(--ink-2); font-family: var(--font); font-size: 12px; font-weight: 600;
+      color: var(--ink-2); font-family: var(--font); font-size: 15px; font-weight: 400;
       cursor: pointer; user-select: none; white-space: nowrap;
-      transition: background var(--tr), border-color var(--tr), color var(--tr), box-shadow var(--tr);
+      transition: background var(--tr), border-color var(--tr), color var(--tr);
     }
     .toggle-btn:hover { background: var(--surface-3); border-color: var(--border-hover); color: var(--ink); }
     .toggle-btn:focus { outline: none; box-shadow: 0 0 0 3px var(--focus); }
-
-    /* Theme icon swap */
-    #theme-toggle .icon-sun  { display: inline; }
-    #theme-toggle .icon-moon { display: none; }
-    [data-theme="light"] #theme-toggle .icon-sun  { display: none; }
-    [data-theme="light"] #theme-toggle .icon-moon { display: inline; }
 
     /* Lang label swap */
     #lang-toggle .lbl-to-fr { display: inline; }
@@ -136,982 +75,240 @@
     [data-lang="fr"] #lang-toggle .lbl-to-fr { display: none; }
     [data-lang="fr"] #lang-toggle .lbl-to-en { display: inline; }
 
-    /* ─── i18n visibility ────────────────────────────── */
+    /* ── i18n ── */
     [data-i18n-fr] { display: none !important; }
     [data-lang="fr"] [data-i18n-en] { display: none !important; }
     [data-lang="fr"] [data-i18n-fr] { display: revert !important; }
-    [data-lang="fr"] .header-badge[data-i18n-fr] { display: inline-flex !important; }
 
-    /* ─── Card ───────────────────────────────────────── */
-    .card {
+    /* ── Layout ── */
+    .container { padding: 0 40px 80px; }
+
+    /* ── Platform intro ── */
+    .platform-intro {
+      padding: 52px 0 48px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+    }
+    .platform-intro h1 {
+      font-size: 32px; font-weight: 600; color: var(--ink);
+      letter-spacing: -.02em; margin-bottom: 12px; line-height: 1.2;
+    }
+    .platform-intro p {
+      font-size: 17px; font-weight: 400; color: var(--ink-2);
+      max-width: 620px; line-height: 1.65;
+    }
+
+    /* ── Section heading ── */
+    .section-heading {
+      font-size: 13px; font-weight: 500; color: var(--ink-3);
+      letter-spacing: .06em; text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    /* ── Tools grid ── */
+    .tools-grid {
+      display: grid; gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
+
+    /* ── Tool card base ── */
+    .tool-card {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); box-shadow: var(--shadow-card); overflow: visible;
-      transition: border-color var(--tr), background var(--tr);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow-card);
+      padding: 28px; display: flex; flex-direction: column; gap: 14px;
+      text-decoration: none; color: inherit;
     }
-    .card:hover { border-color: var(--border-hover); }
-    .card-header { display: flex; align-items: center; gap: 10px; padding: 16px 20px; border-bottom: 1px solid var(--border); }
-    .card-icon { width: 28px; height: 28px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
-    .card-icon.blue  { background: var(--brand-dim); color: var(--brand); }
-    .card-icon.green { background: var(--green-dim); color: var(--green); }
-    .card-icon.gray  { background: var(--surface-3); color: var(--ink-2); }
-    .card-title { font-size: 13px; font-weight: 600; letter-spacing: .01em; color: var(--ink); }
-    .card-body { padding: 20px; }
 
-    /* ─── Grids ──────────────────────────────────────── */
-    .main-grid, .versions-grid { display: grid; gap: 16px; }
-    @media (min-width: 860px) { .main-grid, .versions-grid { grid-template-columns: 1fr 1fr; } }
-
-    /* ─── Version cards ──────────────────────────────── */
-    .version-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); overflow: visible; box-shadow: var(--shadow-card);
-      transition: border-color var(--tr), background var(--tr);
+    /* Active card */
+    a.tool-card {
+      border-left: 3px solid var(--brand);
+      transition: border-color var(--tr), box-shadow var(--tr), transform 80ms;
+      cursor: pointer;
     }
-    .version-card:hover { border-color: var(--border-hover); }
-    .version-card.version-a .version-bar { background: linear-gradient(90deg, var(--brand-dim), transparent); border-bottom: 1px solid rgba(79,142,247,.2); }
-    .version-card.version-b .version-bar { background: linear-gradient(90deg, var(--green-dim), transparent); border-bottom: 1px solid rgba(52,211,153,.2); }
-    [data-theme="light"] .version-card.version-a .version-bar { border-bottom-color: rgba(37,99,235,.15); }
-    [data-theme="light"] .version-card.version-b .version-bar { border-bottom-color: rgba(5,150,105,.15); }
-    .version-bar { padding: 12px 18px; display: flex; align-items: center; gap: 10px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
-    .version-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .version-a .version-dot { background: var(--brand); box-shadow: 0 0 8px var(--brand-glow); }
-    .version-b .version-dot { background: var(--green); box-shadow: 0 0 8px rgba(52,211,153,.4); }
-    .version-label { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
-    .version-a .version-label { color: var(--brand); }
-    .version-b .version-label { color: var(--green); }
-    .version-tag { margin-left: auto; font-size: 11px; color: var(--ink-3); background: var(--surface-3); padding: 2px 8px; border-radius: 100px; transition: background var(--tr); }
-    .version-fields { padding: 16px 18px 20px; }
-
-    /* ─── Fields ─────────────────────────────────────── */
-    .field { margin-bottom: 14px; }
-    .field:last-child { margin-bottom: 0; }
-    .field-label { display: block; font-size: 12px; font-weight: 500; color: var(--ink-2); margin-bottom: 6px; }
-
-    input[type=number] {
-      width: 100%; padding: 10px 14px;
-      background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: var(--radius-md); color: var(--ink);
-      font-family: var(--mono); font-size: 14px;
-      transition: border-color var(--tr), box-shadow var(--tr), background var(--tr);
-      appearance: textfield;
-      -moz-appearance: textfield;
+    a.tool-card:hover {
+      box-shadow: 0 2px 12px rgba(26,86,219,.12), 0 4px 20px rgba(0,0,0,.06);
+      transform: translateY(-1px);
     }
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
-    input[type=number]:hover { border-color: var(--border-hover); background: var(--surface-3); }
-    input[type=number]:focus { outline: none; border-color: rgba(79,142,247,.5); background: var(--surface-3); box-shadow: 0 0 0 3px var(--focus); }
-    [data-theme="light"] input[type=number]:focus { border-color: rgba(37,99,235,.4); }
-    input[type=number].err { border-color: rgba(248,113,113,.4); background: rgba(248,113,113,.06); box-shadow: 0 0 0 3px rgba(248,113,113,.15); }
-    [data-theme="light"] input[type=number].err { border-color: rgba(220,38,38,.35); background: rgba(220,38,38,.05); }
-
-    /* ─── Rate badge ─────────────────────────────────── */
-    .rate-badge { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 6px 12px; border-radius: var(--radius-sm); font-family: var(--mono); font-size: 13px; font-weight: 500; transition: background var(--tr), color var(--tr); }
-    .version-a .rate-badge { background: var(--brand-dim); color: var(--brand); }
-    .version-b .rate-badge { background: var(--green-dim); color: var(--green); }
-    .rate-badge-label { font-size: 11px; opacity: .7; font-weight: 400; font-family: var(--font); }
-
-    /* ─── Lift strip ─────────────────────────────────── */
-    .lift-strip { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 20px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow-card); transition: border-color var(--tr), background var(--tr); }
-    .lift-strip:hover { border-color: var(--border-hover); }
-    .lift-label { font-size: 12px; font-weight: 500; color: var(--ink-3); flex: 1; }
-    .lift-value { font-family: var(--mono); font-size: 20px; font-weight: 500; letter-spacing: -.01em; color: var(--ink); transition: color var(--tr); min-width: 80px; text-align: right; }
-    .lift-value.positive { color: var(--green); }
-    .lift-value.negative { color: var(--red); }
-
-    /* ─── Stat grid ──────────────────────────────────── */
-    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border-radius: var(--radius-md); overflow: visible; }
-    .stat-cell { background: var(--surface-2); padding: 14px 16px; transition: background var(--tr); position: relative; }
-    .stat-cell:hover { background: var(--surface-3); }
-    .stat-cell-label { font-size: 11px; font-weight: 500; color: var(--ink-3); letter-spacing: .02em; margin-bottom: 5px; }
-    .stat-cell-value { font-family: var(--mono); font-size: 15px; font-weight: 500; color: var(--ink); }
-
-    /* ─── Winner block ───────────────────────────────── */
-    .winner-block { border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; transition: background var(--tr); }
-    .winner-block.tie            { background: var(--surface-3); }
-    .winner-block.version-a-wins { background: var(--brand-dim); }
-    .winner-block.version-b-wins { background: var(--green-dim); }
-    .winner-icon { font-size: 22px; }
-    .winner-name { font-size: 16px; font-weight: 600; color: var(--ink); }
-    .winner-desc { font-size: 12px; color: var(--ink-2); margin-top: 1px; }
-
-    /* ─── Sig pill ───────────────────────────────────── */
-    .sig-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 100px; font-size: 12px; font-weight: 600; transition: background var(--tr), color var(--tr); }
-    .sig-pill.yes { background: var(--green-dim); color: var(--green); }
-    .sig-pill.no  { background: var(--red-dim);   color: var(--red); }
-    .sig-pill::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
-
-    /* ─── Result rows ────────────────────────────────── */
-    .result-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
-    .result-row:last-child { border-bottom: none; }
-    .result-key { font-size: 13px; color: var(--ink-2); }
-    .result-val { font-family: var(--mono); font-size: 13px; color: var(--ink); font-weight: 500; }
-
-    /* ─── Interpretation table ───────────────────────── */
-    .interp-table { width: 100%; border-collapse: collapse; }
-    .interp-table thead th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: .04em; color: var(--ink-3); border-bottom: 1px solid var(--border); }
-    .interp-table tbody tr { border-bottom: 1px solid var(--border); transition: background var(--tr); }
-    .interp-table tbody tr:last-child { border-bottom: none; }
-    .interp-table tbody tr:hover { background: var(--surface-2); }
-    .interp-table td { padding: 12px 14px; vertical-align: top; font-size: 13px; color: var(--ink-2); line-height: 1.55; }
-    .interp-table td:first-child { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--ink); white-space: nowrap; width: 70px; }
-    .interp-table td:nth-child(2) { width: 210px; }
-    .ok { color: var(--green) !important; }
-    .no { color: var(--red) !important; }
-    .tsig { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font); font-size: 12px; font-weight: 600; }
-    .tsig.ok { color: var(--green); }
-    .tsig.no { color: var(--red); }
-    .tsig::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
-
-    /* ─── Footer ─────────────────────────────────────── */
-    .footer-row { margin-top: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    .footer-note { font-size: 12px; color: var(--ink-3); max-width: 520px; line-height: 1.5; }
-    .btn-reset { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--ink-2); font-family: var(--font); font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: background var(--tr), border-color var(--tr), color var(--tr); }
-    .btn-reset:hover { background: var(--surface-3); border-color: var(--border-hover); color: var(--ink); }
-    .btn-reset:focus { outline: none; box-shadow: 0 0 0 3px var(--focus); }
-
-    /* ─── Tooltips ───────────────────────────────────── */
-    .tt { position: relative; border-bottom: 1px dashed var(--ink-3); cursor: help; }
-    .tt:focus { outline: 2px solid var(--brand); border-radius: 2px; }
-    .tooltip { position: absolute; left: 0; top: calc(100% + 8px); background: var(--tooltip-bg); border: 1px solid var(--tooltip-bdr); border-radius: var(--radius-md); padding: 12px 14px; max-width: 340px; min-width: 220px; width: max-content; font-size: 12px; line-height: 1.55; color: var(--tooltip-ink); box-shadow: 0 8px 32px rgba(0,0,0,.5); z-index: 100; display: none; white-space: normal; font-family: var(--font); }
-    .tooltip .title { font-weight: 600; color: var(--tooltip-ink-strong); display: block; margin-bottom: 4px; font-size: 12px; }
-    .tooltip::before { content: ''; position: absolute; left: 12px; top: -5px; width: 8px; height: 8px; background: var(--tooltip-bg); border-left: 1px solid var(--tooltip-bdr); border-top: 1px solid var(--tooltip-bdr); transform: rotate(45deg); }
-    .tooltip[data-show="true"] { display: block; }
-    @media (max-width: 520px) { .tooltip { max-width: 88vw; } }
-
-    /* ─── Spacing ────────────────────────────────────── */
-    .section { margin-bottom: 16px; }
-    .section:last-child { margin-bottom: 0; }
-
-    /* ─── Flash animation ────────────────────────────── */
-    @keyframes flash { 0%{opacity:.25} 100%{opacity:1} }
-    .updated { animation: flash .35s ease; }
-
-    /* ─── Bayesian ───────────────────────────────────── */
-    .card-icon.purple { background: rgba(167,139,250,.12); color: #a78bfa; }
-    .bayes-info {
-      font-size: 12px; color: var(--ink-3);
-      margin-bottom: 16px; padding: 10px 14px;
-      background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); line-height: 1.55;
-      transition: background var(--tr), border-color var(--tr);
+    a.tool-card:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--focus), var(--shadow-card);
     }
-    .bayes-chart-wrap {
-      border-radius: var(--radius-md); overflow: hidden;
-      border: 1px solid var(--border); background: var(--surface-2);
-      margin-bottom: 12px;
-      transition: border-color var(--tr), background var(--tr);
+
+    /* Coming soon card */
+    div.tool-card {
+      border-style: dashed;
+      opacity: .75;
     }
-    #bayes-chart { width: 100%; height: 180px; display: block; }
-    .bayes-caption { font-size: 11px; color: var(--ink-3); line-height: 1.5; }
+
+    /* ── Card internals ── */
+    .tc-status {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: var(--radius-sm); border: 1px solid transparent;
+      width: fit-content;
+    }
+    .tc-status--active {
+      color: var(--green); background: var(--green-dim);
+      border-color: rgba(4,120,87,.18);
+    }
+    .tc-status--coming {
+      color: var(--ink-3); background: var(--surface-3);
+      border-color: var(--border);
+    }
+    .tc-status-dot {
+      width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+    }
+    .tc-status--active .tc-status-dot { background: var(--green); }
+    .tc-status--coming .tc-status-dot { background: var(--ink-3); }
+
+    .tc-title {
+      font-size: 17px; font-weight: 600; color: var(--ink);
+      letter-spacing: -.01em; line-height: 1.25;
+    }
+    .tc-description {
+      font-size: 14px; font-weight: 400; color: var(--ink-2);
+      line-height: 1.6; flex-grow: 1;
+    }
+
+    .tc-footer {
+      margin-top: auto; padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .tc-link {
+      font-size: 14px; font-weight: 500; color: var(--brand);
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    a.tool-card:hover .tc-link { text-decoration: underline; }
+    .tc-coming-label {
+      font-size: 14px; font-weight: 400; color: var(--ink-3);
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      padding: 24px 40px; margin-top: 40px;
+      border-top: 1px solid var(--border);
+      font-size: 14px; font-weight: 400; color: var(--ink-3);
+    }
   </style>
 </head>
 <body>
-<div class="container">
 
-  <!-- ════ Top bar ════ -->
-  <div class="top-bar">
-    <header class="header">
-      <div class="header-badge" data-i18n-en>Live Calculator</div>
-      <div class="header-badge" data-i18n-fr>Calculateur en direct</div>
-      <h1 data-i18n-en>A/B Test Calculator</h1>
-      <h1 data-i18n-fr>Calculateur de test A/B</h1>
-      <p data-i18n-en>Enter your data to see which version performs better</p>
-      <p data-i18n-fr>Entrez vos données pour voir quelle version performe le mieux</p>
-    </header>
-
+<!-- Site bar -->
+<header class="site-bar" role="banner">
+  <div class="site-bar-inner">
+    <a href="index.html" class="site-wordmark" aria-label="Canada.ca Analytics — Home">
+      <img src="sig-blk-en.svg" alt="Government of Canada" class="site-wordmark-img"/>
+      <div class="site-name-divider" aria-hidden="true"></div>
+      <span class="site-name-secondary" data-i18n-en>Canada.ca Analytics</span>
+      <span class="site-name-secondary" data-i18n-fr>Analytique Canada.ca</span>
+    </a>
     <div class="controls">
-      <!-- Language toggle: shows what you'll switch TO -->
-      <button class="toggle-btn" id="lang-toggle" aria-label="Changer de langue / Switch language">
-        <span style="font-size:14px">🌐</span>
-        <span class="lbl-to-fr">Français</span>
-        <span class="lbl-to-en">English</span>
-      </button>
-      <!-- Theme toggle -->
-      <button class="toggle-btn" id="theme-toggle" aria-label="Toggle theme">
-        <span class="icon-sun">☀️</span>
-        <span class="icon-moon">🌙</span>
-        <span id="theme-lbl-en" data-i18n-en>Light</span>
-        <span id="theme-lbl-fr" data-i18n-fr>Clair</span>
+      <button class="toggle-btn" id="lang-toggle" aria-label="Switch language">
+        <span class="lbl-to-fr">FR</span>
+        <span class="lbl-to-en">EN</span>
       </button>
     </div>
   </div>
+</header>
 
-  <!-- ════ Version inputs ════ -->
-  <section class="section versions-grid">
+<!-- Main content -->
+<main class="container" role="main">
 
-    <!-- Version A (Control) -->
-    <div class="version-card version-a">
-      <div class="version-bar">
-        <span class="version-dot"></span>
-        <span class="version-label">Version A</span>
-        <span class="version-tag" data-i18n-en>Control</span>
-        <span class="version-tag" data-i18n-fr>Témoin</span>
-      </div>
-      <div class="version-fields">
-        <div class="field">
-          <label class="field-label" for="visA">
-            <span class="tt" tabindex="0"
-              data-tip-title-en="Visitors"    data-tip-en="Number of unique users who were shown this version of the page or experiment."
-              data-tip-title-fr="Visiteurs"   data-tip-fr="Nombre d'utilisateurs uniques ayant vu cette version de la page ou de l'expérience.">
-              <span data-i18n-en>Visitors</span><span data-i18n-fr>Visiteurs</span>
-            </span>
-          </label>
-          <input id="visA" name="visA" type="number" inputmode="numeric" min="0" step="1" value="0"/>
-        </div>
-        <div class="field">
-          <label class="field-label" for="convA">
-            <span class="tt" tabindex="0"
-              data-tip-title-en="Conversions" data-tip-en="Number of users who completed the desired goal action — e.g. a purchase, sign-up, or click."
-              data-tip-title-fr="Conversions" data-tip-fr="Nombre d'utilisateurs ayant réalisé l'action souhaitée — ex. un achat, une inscription ou un clic.">
-              <span data-i18n-en>Conversions</span><span data-i18n-fr>Conversions</span>
-            </span>
-          </label>
-          <input id="convA" name="convA" type="number" inputmode="numeric" min="0" step="1" value="0"/>
-        </div>
-        <div class="rate-badge">
-          <span class="rate-badge-label" data-i18n-en>Conv. rate</span>
-          <span class="rate-badge-label" data-i18n-fr>Taux de conv.</span>
-          <span id="rateA" aria-live="polite">–</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Version B (Variant) -->
-    <div class="version-card version-b">
-      <div class="version-bar">
-        <span class="version-dot"></span>
-        <span class="version-label">Version B</span>
-        <span class="version-tag" data-i18n-en>Variant</span>
-        <span class="version-tag" data-i18n-fr>Variante</span>
-      </div>
-      <div class="version-fields">
-        <div class="field">
-          <label class="field-label" for="visB">
-            <span class="tt" tabindex="0"
-              data-tip-title-en="Visitors"    data-tip-en="Number of unique users who were shown this version of the page or experiment."
-              data-tip-title-fr="Visiteurs"   data-tip-fr="Nombre d'utilisateurs uniques ayant vu cette version de la page ou de l'expérience.">
-              <span data-i18n-en>Visitors</span><span data-i18n-fr>Visiteurs</span>
-            </span>
-          </label>
-          <input id="visB" name="visB" type="number" inputmode="numeric" min="0" step="1" value="0"/>
-        </div>
-        <div class="field">
-          <label class="field-label" for="convB">
-            <span class="tt" tabindex="0"
-              data-tip-title-en="Conversions" data-tip-en="Number of users who completed the desired goal action — e.g. a purchase, sign-up, or click."
-              data-tip-title-fr="Conversions" data-tip-fr="Nombre d'utilisateurs ayant réalisé l'action souhaitée — ex. un achat, une inscription ou un clic.">
-              <span data-i18n-en>Conversions</span><span data-i18n-fr>Conversions</span>
-            </span>
-          </label>
-          <input id="convB" name="convB" type="number" inputmode="numeric" min="0" step="1" value="0"/>
-        </div>
-        <div class="rate-badge">
-          <span class="rate-badge-label" data-i18n-en>Conv. rate</span>
-          <span class="rate-badge-label" data-i18n-fr>Taux de conv.</span>
-          <span id="rateB" aria-live="polite">–</span>
-        </div>
-      </div>
-    </div>
+  <!-- Platform intro -->
+  <section class="platform-intro">
+    <h1 data-i18n-en>Canada.ca Analytics</h1>
+    <h1 data-i18n-fr>Analytique Canada.ca</h1>
+    <p data-i18n-en>A collection of tools to help Government of Canada teams make data-informed decisions about digital content and user experience.</p>
+    <p data-i18n-fr>Une collection d'outils pour aider les équipes du gouvernement du Canada à prendre des décisions éclairées par les données sur le contenu numérique et l'expérience utilisateur.</p>
   </section>
 
-  <!-- ════ Lift strip ════ -->
-  <div class="section lift-strip">
-    <span class="lift-label">
-      <span class="tt" tabindex="0"
-        data-tip-title-en="How much better is B than A?"         data-tip-en="How much higher or lower Version B's conversion rate is compared to Version A."
-        data-tip-title-fr="Dans quelle mesure B est-il meilleur que A ?" data-tip-fr="Dans quelle mesure le taux de conversion de la version B est plus élevé ou plus bas que celui de la version A.">
-        <span data-i18n-en>How much better is Version B than Version A?</span>
-        <span data-i18n-fr>Dans quelle mesure la version B est-elle meilleure que la version A ?</span>
+  <!-- Tools grid -->
+  <p class="section-heading" data-i18n-en>Tools</p>
+  <p class="section-heading" data-i18n-fr>Outils</p>
+
+  <div class="tools-grid" role="list">
+
+    <!-- A/B Test Calculator — active -->
+    <a href="ab-test-calculator.html" class="tool-card" role="listitem" aria-label="A/B Test Calculator — Open tool">
+      <span class="tc-status tc-status--active">
+        <span class="tc-status-dot" aria-hidden="true"></span>
+        <span data-i18n-en>Available</span>
+        <span data-i18n-fr>Disponible</span>
       </span>
-    </span>
-    <span class="lift-value" id="lift" aria-live="polite">–</span>
-  </div>
-
-  <!-- ════ Summary & Stats ════ -->
-  <section class="section main-grid">
-
-    <!-- Result Summary -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon blue">▲</div>
-        <span class="card-title" data-i18n-en>Results summary</span>
-        <span class="card-title" data-i18n-fr>Résumé des résultats</span>
-      </div>
-      <div class="card-body">
-        <div class="winner-block tie" id="winner-block">
-          <span class="winner-icon" id="winner-icon">⚖️</span>
-          <div>
-            <div class="winner-name" id="winner" aria-live="polite">–</div>
-            <div class="winner-desc" id="winner-desc">–</div>
-          </div>
-        </div>
-        <div class="result-row">
-          <span class="result-key">
-            <span class="tt" tabindex="0"
-              data-tip-title-en="How much better is B?" data-tip-en="How much higher or lower Version B performs compared to Version A."
-              data-tip-title-fr="Dans quelle mesure B est-il meilleur ?" data-tip-fr="Dans quelle mesure la version B performe mieux ou moins bien que la version A.">
-              <span data-i18n-en>Improvement</span><span data-i18n-fr>Amélioration</span>
-            </span>
-          </span>
-          <span class="result-val" id="improve" aria-live="polite">–</span>
-        </div>
-        <div class="result-row">
-          <span class="result-key">
-            <span class="tt" tabindex="0"
-              data-tip-title-en="Is the result reliable?" data-tip-en="At 95% confidence, a reliable result means there is less than a 5% chance the difference between versions is due to chance."
-              data-tip-title-fr="Le résultat est-il fiable ?" data-tip-fr="À 95 % de confiance, un résultat fiable signifie qu'il y a moins de 5 % de chance que la différence soit due au hasard.">
-              <span data-i18n-en>Reliable at 95% confidence?</span>
-              <span data-i18n-fr>Fiable à 95 % de confiance ?</span>
-            </span>
-          </span>
-          <span id="sig95" aria-live="polite">–</span>
-        </div>
-        <div class="result-row">
-          <span class="result-key">
-            <span data-i18n-en>Recommendation</span>
-            <span data-i18n-fr>Recommandation</span>
-          </span>
-          <span class="result-val" id="rec" aria-live="polite" style="max-width:200px;text-align:right;font-family:var(--font);font-size:12px;color:var(--ink-2)">–</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Statistics -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon gray">∑</div>
-        <span class="card-title" data-i18n-en>Test statistics</span>
-        <span class="card-title" data-i18n-fr>Statistiques du test</span>
-      </div>
-      <div class="card-body">
-        <div class="stat-grid">
-          <div class="stat-cell">
-            <div class="stat-cell-label">
-              <span class="tt" tabindex="0"
-                data-tip-title-en="Combined conversion rate" data-tip-en="The overall conversion rate across both versions combined. Used as the baseline in the calculation."
-                data-tip-title-fr="Taux de conversion combiné" data-tip-fr="Le taux de conversion global des deux versions combinées. Utilisé comme référence dans le calcul.">
-                <span data-i18n-en>Combined rate</span>
-                <span data-i18n-fr>Taux combiné</span>
-              </span>
-            </div>
-            <div class="stat-cell-value" id="pooled" aria-live="polite">–</div>
-          </div>
-          <div class="stat-cell">
-            <div class="stat-cell-label">
-              <span class="tt" tabindex="0"
-                data-tip-title-en="Expected variation" data-tip-en="How much the difference between the two versions could vary by chance. A smaller value means the results are more precise."
-                data-tip-title-fr="Variation attendue"  data-tip-fr="Dans quelle mesure la différence entre les deux versions pourrait varier par hasard. Une valeur plus petite indique des résultats plus précis.">
-                <span data-i18n-en>Expected variation</span>
-                <span data-i18n-fr>Variation attendue</span>
-              </span>
-            </div>
-            <div class="stat-cell-value" id="se" aria-live="polite">–</div>
-          </div>
-          <div class="stat-cell">
-            <div class="stat-cell-label">
-              <span class="tt" tabindex="0"
-                data-tip-title-en="Z-score"  data-tip-en="A number that measures how far apart the two versions' rates are. A larger number (positive or negative) means a bigger difference."
-                data-tip-title-fr="Score Z"   data-tip-fr="Un chiffre qui mesure l'écart entre les taux des deux versions. Un chiffre plus grand (positif ou négatif) indique une différence plus grande.">
-                <span data-i18n-en>Z‑score</span>
-                <span data-i18n-fr>Score Z</span>
-              </span>
-            </div>
-            <div class="stat-cell-value" id="z" aria-live="polite">–</div>
-          </div>
-          <div class="stat-cell">
-            <div class="stat-cell-label">
-              <span class="tt" tabindex="0"
-                data-tip-title-en="p-value" data-tip-en="The probability that the difference between versions is due to chance. A lower p-value means the result is more reliable. Below 0.05 is generally considered reliable."
-                data-tip-title-fr="Valeur p"  data-tip-fr="La probabilité que la différence entre les versions soit due au hasard. Une valeur p plus basse signifie un résultat plus fiable. En dessous de 0,05 est généralement considéré fiable.">
-                <span data-i18n-en>p-value</span>
-                <span data-i18n-fr>Valeur p</span>
-              </span>
-            </div>
-            <div class="stat-cell-value" id="p" aria-live="polite">–</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════ Interpretation table ════ -->
-  <section class="section card">
-    <div class="card-header">
-      <div class="card-icon green">⊕</div>
-      <span class="card-title" data-i18n-en>How reliable are your results?</span>
-      <span class="card-title" data-i18n-fr>Vos résultats sont-ils fiables ?</span>
-    </div>
-    <div style="overflow-x:auto">
-      <table class="interp-table" aria-describedby="interphelp">
-        <thead>
-          <tr>
-            <th scope="col">
-              <span class="tt" tabindex="0"
-                data-tip-title-en="Confidence level" data-tip-en="How certain you want to be before acting on results. At 95% confidence, you accept a 5% chance the difference is due to chance."
-                data-tip-title-fr="Niveau de confiance" data-tip-fr="À quel point vous voulez être certain avant d'agir sur les résultats. À 95 % de confiance, vous acceptez 5 % de chance que la différence soit due au hasard.">
-                <span data-i18n-en>Confidence level</span><span data-i18n-fr>Niveau de confiance</span>
-              </span>
-            </th>
-            <th scope="col">
-              <span class="tt" tabindex="0"
-                data-tip-title-en="Is the result reliable?" data-tip-en="A result is reliable at a given confidence level if the p-value is below the threshold (e.g. below 0.05 for 95% confidence)."
-                data-tip-title-fr="Le résultat est-il fiable ?" data-tip-fr="Un résultat est fiable à un niveau de confiance donné si la valeur p est inférieure au seuil (ex. inférieure à 0,05 pour 95 % de confiance).">
-                <span data-i18n-en>Reliable?</span><span data-i18n-fr>Fiable ?</span>
-              </span>
-            </th>
-            <th scope="col">
-              <span data-i18n-en>Interpretation</span>
-              <span data-i18n-fr>Interprétation</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody id="tbody"></tbody>
-      </table>
-    </div>
-    <div style="padding:14px 16px;border-top:1px solid var(--border)">
-      <p id="interphelp" style="font-size:12px;color:var(--ink-3);line-height:1.55">
-        <span data-i18n-en>Confidence level: how sure you want to be before acting on results. At 95% confidence, you accept a 5% chance the difference is due to chance.</span>
-        <span data-i18n-fr>Niveau de confiance : à quel point vous voulez être certain avant d'agir sur les résultats. À 95 % de confiance, vous acceptez 5 % de chance que la différence soit due au hasard.</span>
-      </p>
-    </div>
-  </section>
-
-  <!-- ════ Bayesian Analysis ════ -->
-  <section class="section card">
-    <div class="card-header">
-      <div class="card-icon purple" style="font-family:var(--mono);font-weight:700;font-size:14px">β</div>
-      <span class="card-title" data-i18n-en>Bayesian analysis</span>
-      <span class="card-title" data-i18n-fr>Analyse bayésienne</span>
-      <span style="margin-left:auto;font-size:11px;color:var(--ink-3);background:var(--surface-3);padding:2px 8px;border-radius:100px;flex-shrink:0;transition:background var(--tr)">
-        <span data-i18n-en>Works with few visitors</span>
-        <span data-i18n-fr>Fonctionne avec peu de visiteurs</span>
-      </span>
-    </div>
-    <div class="card-body">
-      <div class="bayes-info">
-        <span class="tt" tabindex="0"
-          data-tip-title-en="Why use this with small audiences?"
-          data-tip-en="The standard calculator needs hundreds or thousands of visitors before results are trustworthy. This one works even with 10–20 visitors, because it runs 20,000 simulated reruns of your experiment and counts how often each version wins. Instead of a confusing number, you get a plain answer like '73% chance Version B is the real winner' — so you can make a call even with limited data."
-          data-tip-title-fr="Pourquoi l'utiliser avec peu de visiteurs ?"
-          data-tip-fr="Le calculateur standard nécessite des centaines ou des milliers de visiteurs pour être fiable. Celui-ci fonctionne avec aussi peu que 10–20 visiteurs, en simulant 20 000 réexécutions de votre expérience pour compter combien de fois chaque version gagne. Au lieu d'un chiffre abstrait, vous obtenez une réponse claire : « 73 % de chance que la version B soit vraiment meilleure ».">
-          <span data-i18n-en>No minimum visitors needed · Works even with 10–20 conversions · Gives a plain "which version is probably better?" answer</span>
-          <span data-i18n-fr>Aucun minimum de visiteurs · Fonctionne dès 10–20 conversions · Répond clairement « quelle version est probablement meilleure ? »</span>
+      <span class="tc-title" data-i18n-en>A/B Test Calculator</span>
+      <span class="tc-title" data-i18n-fr>Calculateur de test A/B</span>
+      <p class="tc-description" data-i18n-en>Determine whether the difference in conversion rates between two page variants is statistically significant.</p>
+      <p class="tc-description" data-i18n-fr>Déterminez si la différence de taux de conversion entre deux variantes de page est statistiquement significative.</p>
+      <div class="tc-footer">
+        <span class="tc-link">
+          <span data-i18n-en>Open tool →</span>
+          <span data-i18n-fr>Ouvrir l'outil →</span>
         </span>
       </div>
-      <div class="stat-grid" style="margin-bottom:16px">
-        <div class="stat-cell">
-          <div class="stat-cell-label">
-            <span class="tt" tabindex="0"
-              data-tip-title-en="Chance Version B is the real winner"
-              data-tip-en="We ran 20,000 simulated reruns of your experiment. This number is how often Version B came out ahead. Think of it like flipping a weighted coin — if B wins 87% of reruns, there's an 87% chance it's genuinely better. Above 90–95% and you can feel confident acting on it. Around 50% means no clear winner yet."
-              data-tip-title-fr="Probabilité que la version B soit vraiment meilleure"
-              data-tip-fr="Nous avons simulé 20 000 réexécutions de votre expérience. Ce chiffre représente la proportion des fois où la version B a gagné. Si B gagne 87 % des simulations, il y a 87 % de chance qu'elle soit réellement meilleure. Au-dessus de 90–95 %, vous pouvez agir avec confiance. Autour de 50 % signifie qu'il n'y a pas encore de gagnant clair.">
-              <span data-i18n-en>Chance B wins</span>
-              <span data-i18n-fr>Chance que B gagne</span>
-            </span>
-          </div>
-          <div class="stat-cell-value" id="bayes-prob">–</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-cell-label">
-            <span class="tt" tabindex="0"
-              data-tip-title-en="Best guess at how much better B is"
-              data-tip-en="Our single best estimate of how much Version B's conversion rate differs from Version A's. Positive means B is likely converting more visitors. Because data is limited, this is a rough centre of a range — check the 'low end' and 'high end' cells below for the full picture."
-              data-tip-title-fr="Meilleure estimation de l'écart entre B et A"
-              data-tip-fr="Notre meilleure estimation unique de la différence de taux de conversion entre la version B et la version A. Un nombre positif signifie que B convertit probablement plus de visiteurs. Comme les données sont limitées, consultez les bornes basse et haute ci-dessous pour avoir le tableau complet.">
-              <span data-i18n-en>Best guess improvement</span>
-              <span data-i18n-fr>Amélioration estimée</span>
-            </span>
-          </div>
-          <div class="stat-cell-value" id="bayes-elift">–</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-cell-label">
-            <span class="tt" tabindex="0"
-              data-tip-title-en="The low end of the realistic improvement range"
-              data-tip-en="We're 95% confident the true difference between B and A is somewhere between this number and the 'high end' value. If both numbers are positive, B is almost certainly better by at least this much. If this number is negative, there's a real chance A could be equal or better."
-              data-tip-title-fr="Borne basse de la plage d'amélioration réaliste"
-              data-tip-fr="Nous sommes certains à 95% que la vraie différence entre B et A se situe entre ce chiffre et la borne haute. Si les deux chiffres sont positifs, B est presque certainement meilleur d'au moins ce montant. Si ce chiffre est négatif, A pourrait être aussi bon, voire meilleur.">
-              <span data-i18n-en>Improvement — low end</span>
-              <span data-i18n-fr>Amélioration — borne basse</span>
-            </span>
-          </div>
-          <div class="stat-cell-value" id="bayes-ci-lo">–</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-cell-label">
-            <span class="tt" tabindex="0"
-              data-tip-title-en="The high end of the realistic improvement range"
-              data-tip-en="Even if Version B is probably winning, this tells you the ceiling of how much better it could realistically be. A small high-end number means B's advantage is modest at best — useful to know before betting big on the result."
-              data-tip-title-fr="Borne haute de la plage d'amélioration réaliste"
-              data-tip-fr="Même si la version B est probablement en tête, cela indique le plafond de son avantage réaliste. Un petit chiffre haut signifie que l'avantage de B est modeste au mieux — utile à savoir avant de se fier entièrement au résultat.">
-              <span data-i18n-en>Improvement — high end</span>
-              <span data-i18n-fr>Amélioration — borne haute</span>
-            </span>
-          </div>
-          <div class="stat-cell-value" id="bayes-ci-hi">–</div>
-        </div>
-      </div>
-      <div class="result-row" style="padding-bottom:16px">
-        <span class="result-key">
-          <span data-i18n-en>What this means</span>
-          <span data-i18n-fr>Ce que ça signifie</span>
-        </span>
-        <span id="bayes-verdict" aria-live="polite">–</span>
-      </div>
-      <div class="bayes-chart-wrap">
-        <canvas id="bayes-chart" role="img" aria-label="Posterior distribution of conversion rate difference B minus A"></canvas>
-      </div>
-      <p class="bayes-caption" data-i18n-en>Each bar shows how often Version B beat Version A across 20,000 simulated runs. Green = B ahead, Red = A ahead. Dashed lines show the likely range of difference.</p>
-      <p class="bayes-caption" data-i18n-fr>Chaque barre montre combien de fois la version B a battu la version A sur 20 000 simulations. Vert = B en tête, Rouge = A en tête. Les tirets délimitent la plage probable de différence.</p>
-    </div>
-  </section>
+    </a>
 
-  <!-- ════ Footer ════ -->
-  <div class="footer-row">
-    <p class="footer-note">
-      <span data-i18n-en>Results are for information only. Always consider real-world impact alongside test results before making decisions.</span>
-      <span data-i18n-fr>Les résultats sont fournis à titre indicatif uniquement. Tenez toujours compte de l'impact réel en plus des résultats du test avant de prendre des décisions.</span>
-    </p>
-    <button class="btn-reset" id="reset">
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M1 4c1.5-2.5 4-4 7-4a7 7 0 1 1-7 7"/><polyline points="1,1 1,4 4,4"/>
-      </svg>
-      <span data-i18n-en>Reset data</span>
-      <span data-i18n-fr>Réinitialiser les données</span>
-    </button>
+    <!-- Bayesian A/B Test Calculator — coming soon -->
+    <div class="tool-card" role="listitem" aria-label="Bayesian A/B Test Calculator — Coming soon">
+      <span class="tc-status tc-status--coming">
+        <span class="tc-status-dot" aria-hidden="true"></span>
+        <span data-i18n-en>Coming soon</span>
+        <span data-i18n-fr>Bientôt disponible</span>
+      </span>
+      <span class="tc-title" data-i18n-en>Bayesian A/B Test Calculator</span>
+      <span class="tc-title" data-i18n-fr>Calculateur bayésien de test A/B</span>
+      <p class="tc-description" data-i18n-en>Calculate the probability that one variant outperforms another using a Bayesian approach — no fixed sample size required.</p>
+      <p class="tc-description" data-i18n-fr>Calculez la probabilité qu'une variante surpasse l'autre grâce à une approche bayésienne — aucune taille d'échantillon fixe requise.</p>
+      <div class="tc-footer">
+        <span class="tc-coming-label" data-i18n-en>In development</span>
+        <span class="tc-coming-label" data-i18n-fr>En développement</span>
+      </div>
+    </div>
+
+    <!-- Sample Size Calculator — coming soon -->
+    <div class="tool-card" role="listitem" aria-label="Sample Size Calculator — Coming soon">
+      <span class="tc-status tc-status--coming">
+        <span class="tc-status-dot" aria-hidden="true"></span>
+        <span data-i18n-en>Coming soon</span>
+        <span data-i18n-fr>Bientôt disponible</span>
+      </span>
+      <span class="tc-title" data-i18n-en>Sample Size Calculator</span>
+      <span class="tc-title" data-i18n-fr>Calculateur de taille d'échantillon</span>
+      <p class="tc-description" data-i18n-en>Estimate how many visitors each variant needs before you can reliably detect a meaningful difference in conversion rates.</p>
+      <p class="tc-description" data-i18n-fr>Estimez le nombre de visiteurs dont chaque variante a besoin avant de pouvoir détecter de manière fiable une différence significative dans les taux de conversion.</p>
+      <div class="tc-footer">
+        <span class="tc-coming-label" data-i18n-en>In development</span>
+        <span class="tc-coming-label" data-i18n-fr>En développement</span>
+      </div>
+    </div>
+
   </div>
 
-</div><!-- /container -->
+</main>
+
+<!-- Footer -->
+<footer class="site-footer" role="contentinfo">
+  <span data-i18n-en>© Government of Canada · Canada.ca Analytics</span>
+  <span data-i18n-fr>© Gouvernement du Canada · Analytique Canada.ca</span>
+</footer>
 
 <script>
-  /* ══════════════════════════════════════════════════════
-     i18n string table — all JS-generated display text
-  ══════════════════════════════════════════════════════ */
-  const STRINGS = {
-    en: {
-      tie:          'Tie',
-      vA:           'Version A (Control)',
-      vB:           'Version B',
-      awaitDesc:    'Enter data above to see results',
-      higherRate:   p => `${p}% higher conversion rate`,
-      lowerRate:    p => `${p}% lower conversion rate`,
-      equalRate:    'Equal conversion rates',
-      sigYes:       'Reliable',
-      sigNo:        'Not yet reliable',
-      adoptWinner:  'Consider using the better version',
-      moreData:     'Collect more data',
-      tsigYes:      c => `Reliable at ${c}%`,
-      tsigNo:       ()=> 'Not yet reliable',
-      whoA:         'Version A (Control) currently has a higher conversion rate than Version B.',
-      whoB:         'Version B currently has a higher conversion rate than Version A (Control).',
-      whoTie:       'Both versions currently have the same conversion rate.',
-      rowSig:   (c, chance, who) =>
-        `At ${c}% confidence, only about ${chance}% chance the difference is due to chance. `+
-        `The result is reliable and likely reflects a real difference between the versions. ${who}`,
-      rowNot:   (c, chance) =>
-        `At ${c}% confidence, there is still about ${chance}% chance the difference is due to chance. `+
-        `Collect more data before deciding.`,
-      themeLbl:     isDark => isDark ? 'Light' : 'Dark',
-      bayesStrongB: p => `Version B is almost certainly better (${p} chance)`,
-      bayesModB:    p => `Version B is probably better (${p} chance)`,
-      bayesWeakB:   p => `Version B has a slight edge (${p} chance)`,
-      bayesTie:     p => `Too close to call — collect more data (${p} chance B wins)`,
-      bayesWeakA:   p => `Version A has a slight edge (${p} chance B wins)`,
-      bayesModA:    p => `Version A is probably better (${p} chance B wins)`,
-      bayesStrongA: p => `Version A is almost certainly better (${p} chance B wins)`,
-    },
-    fr: {
-      tie:          'Égalité',
-      vA:           'Version A (Témoin)',
-      vB:           'Version B',
-      awaitDesc:    'Entrez vos données ci-dessus pour voir les résultats',
-      higherRate:   p => `Taux de conversion ${p} % plus élevé`,
-      lowerRate:    p => `Taux de conversion ${p} % plus bas`,
-      equalRate:    'Taux de conversion identiques',
-      sigYes:       'Fiable',
-      sigNo:        'Pas encore fiable',
-      adoptWinner:  "Envisager d'utiliser la meilleure version",
-      moreData:     'Collecter davantage de données',
-      tsigYes:      c => `Fiable à ${c} %`,
-      tsigNo:       ()=> 'Pas encore fiable',
-      whoA:         'La version A (Témoin) a actuellement un taux de conversion plus élevé que la version B.',
-      whoB:         'La version B a actuellement un taux de conversion plus élevé que la version A (Témoin).',
-      whoTie:       'Les deux versions ont actuellement le même taux de conversion.',
-      rowSig:   (c, chance, who) =>
-        `À ${c} % de confiance, seulement environ ${chance} % de chance que la différence soit due au hasard. `+
-        `Le résultat est fiable et reflète probablement une vraie différence entre les versions. ${who}`,
-      rowNot:   (c, chance) =>
-        `À ${c} % de confiance, il y a encore environ ${chance} % de chance que la différence soit due au hasard. `+
-        `Collectez plus de données avant de décider.`,
-      themeLbl:     isDark => isDark ? 'Clair' : 'Sombre',
-      bayesStrongB: p => `La version B est presque certainement meilleure (${p} de chance)`,
-      bayesModB:    p => `La version B est probablement meilleure (${p} de chance)`,
-      bayesWeakB:   p => `La version B a un léger avantage (${p} de chance)`,
-      bayesTie:     p => `Trop serré pour conclure — collectez plus de données (${p} de chance pour B)`,
-      bayesWeakA:   p => `La version A a un léger avantage (${p} de chance pour B)`,
-      bayesModA:    p => `La version A est probablement meilleure (${p} de chance pour B)`,
-      bayesStrongA: p => `La version A est presque certainement meilleure (${p} de chance pour B)`,
+  const html = document.documentElement;
+  const lang = () => html.getAttribute('data-lang') || 'en';
+
+  // Restore saved language preference
+  (function () {
+    const saved = localStorage.getItem('ca-analytics-lang');
+    if (saved && saved !== lang()) {
+      html.setAttribute('data-lang', saved);
+      html.setAttribute('lang', saved);
     }
-  };
+  })();
 
-  /* ══════════════════════════════════════════════════════
-     Helpers
-  ══════════════════════════════════════════════════════ */
-  const html  = document.documentElement;
-  const $     = s => document.querySelector(s);
-  const lang  = () => html.getAttribute('data-lang') || 'en';
-  const s     = () => STRINGS[lang()];
-  const fmtPct= (x, dp=2) => isFinite(x) ? (100*x).toFixed(dp)+'%' : '—';
-
-  function flash(el){
-    if(!el) return;
-    el.classList.remove('updated'); void el.offsetWidth; el.classList.add('updated');
-  }
-
-  /* ══════════════════════════════════════════════════════
-     Tooltip wiring — language-aware, re-reads on hover
-  ══════════════════════════════════════════════════════ */
-  function wireHoverTooltips(){
-    document.querySelectorAll('.tt').forEach(el=>{
-      let tip;
-      const show = () => {
-        const L = lang();
-        const title = el.getAttribute(`data-tip-title-${L}`) || el.getAttribute('data-tip-title-en') || 'Help';
-        const text  = el.getAttribute(`data-tip-${L}`)       || el.getAttribute('data-tip-en')       || '';
-        if(!tip){ tip = document.createElement('div'); tip.className='tooltip'; el.appendChild(tip); }
-        tip.innerHTML = `<span class="title">${title}</span>${text}`;
-        tip.setAttribute('data-show','true');
-      };
-      const hide = () => { if(tip) tip.setAttribute('data-show','false'); };
-      el.addEventListener('mouseenter', show);
-      el.addEventListener('mouseleave', hide);
-      el.addEventListener('focus',      show);
-      el.addEventListener('blur',       hide);
-      el.addEventListener('keydown', e => { if(e.key==='Escape') hide(); });
-    });
-  }
-
-  /* ══════════════════════════════════════════════════════
-     Theme toggle
-  ══════════════════════════════════════════════════════ */
-  $('#theme-toggle').addEventListener('click', () => {
-    const isDark = html.getAttribute('data-theme') === 'dark';
-    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-    // Update button label (both lang variants)
-    $('#theme-lbl-en').textContent = STRINGS.en.themeLbl(isDark);
-    $('#theme-lbl-fr').textContent = STRINGS.fr.themeLbl(isDark);
-  });
-
-  /* ══════════════════════════════════════════════════════
-     Language toggle
-  ══════════════════════════════════════════════════════ */
-  $('#lang-toggle').addEventListener('click', () => {
-    const isFr = lang() === 'fr';
-    html.setAttribute('data-lang', isFr ? 'en' : 'fr');
-    html.setAttribute('lang',      isFr ? 'en' : 'fr');
-    compute(); // regenerate JS-built table rows in new language
-  });
-
-  /* ══════════════════════════════════════════════════════
-     Standard normal CDF — UNCHANGED (Abramowitz–Stegun)
-  ══════════════════════════════════════════════════════ */
-  function phi(x){
-    const b1=0.319381530,b2=-0.356563782,b3=1.781477937,b4=-1.821255978,b5=1.330274429,p=0.2316419,c=0.39894228;
-    const t=1/(1+p*Math.abs(x)),z=c*Math.exp(-x*x/2)*((((b5*t+b4)*t+b3)*t+b2)*t+b1)*t,r=1-z; return x>=0?r:1-r;
-  }
-
-  /* ══════════════════════════════════════════════════════
-     Bayesian helpers — Beta-Binomial model
-     Prior: Beta(1,1) = uniform (no prior knowledge)
-  ══════════════════════════════════════════════════════ */
-  let _bmSpare = null;
-  function _normalSample() {
-    if (_bmSpare !== null) { const v = _bmSpare; _bmSpare = null; return v; }
-    let u, v, sq;
-    do { u = Math.random()*2-1; v = Math.random()*2-1; sq = u*u+v*v; } while (sq >= 1 || sq === 0);
-    const m = Math.sqrt(-2*Math.log(sq)/sq);
-    _bmSpare = v*m; return u*m;
-  }
-
-  function _sampleGamma(a) {
-    if (a < 1) return _sampleGamma(1+a) * Math.pow(Math.random(), 1/a);
-    const d = a - 1/3, c = 1/Math.sqrt(9*d);
-    for (;;) {
-      let x, v;
-      do { x = _normalSample(); v = 1+c*x; } while (v <= 0);
-      v = v*v*v;
-      const u = Math.random();
-      if (u < 1 - 0.0331*x*x*x*x) return d*v;
-      if (Math.log(u) < 0.5*x*x + d*(1 - v + Math.log(v))) return d*v;
-    }
-  }
-
-  function _sampleBeta(a, b) { const x = _sampleGamma(a), y = _sampleGamma(b); return x/(x+y); }
-
-  let _bayesResult = null;
-
-  function _cssRgb(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
-
-  function _clearBayes() {
-    ['#bayes-prob','#bayes-elift','#bayes-ci-lo','#bayes-ci-hi']
-      .forEach(id => $(id).textContent = '–');
-    $('#bayes-verdict').innerHTML = '–';
-    _bayesResult = null;
-    const canvas = document.getElementById('bayes-chart');
-    if (canvas) { const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); }
-  }
-
-  function computeBayes() {
-    const nA = Number($('#visA').value), xA = Number($('#convA').value);
-    const nB = Number($('#visB').value), xB = Number($('#convB').value);
-
-    // Wait until both groups have at least one visitor entered
-    if (nA === 0 || nB === 0) { _clearBayes(); return; }
-
-    // Posterior parameters: Beta(conversions + 1, non-conversions + 1)
-    const aA = xA + 1, bA = Math.max(0, nA - xA) + 1;
-    const aB = xB + 1, bB = Math.max(0, nB - xB) + 1;
-
-    const N = 20000;
-    const diffs = new Float64Array(N);
-    let bWins = 0;
-    for (let i = 0; i < N; i++) {
-      const sA = _sampleBeta(aA, bA), sB = _sampleBeta(aB, bB);
-      diffs[i] = sB - sA;
-      if (sB > sA) bWins++;
-    }
-    diffs.sort();
-
-    const pBbeatsA = bWins / N;
-    const ci95Lo   = diffs[Math.floor(0.025 * N)];
-    const ci95Hi   = diffs[Math.floor(0.975 * N)];
-    let   meanDiff = 0; for (const d of diffs) meanDiff += d; meanDiff /= N;
-
-    _bayesResult = { pBbeatsA, ci95Lo, ci95Hi, meanDiff, diffs };
-
-    // Update stat cells
-    const fmtDiff = v => (v*100 >= 0 ? '+' : '') + (v*100).toFixed(2) + '%';
-    const pStr = (pBbeatsA * 100).toFixed(1) + '%';
-    $('#bayes-prob').textContent   = pStr;          flash($('#bayes-prob'));
-    $('#bayes-elift').textContent  = fmtDiff(meanDiff); flash($('#bayes-elift'));
-    $('#bayes-ci-lo').textContent  = fmtDiff(ci95Lo);   flash($('#bayes-ci-lo'));
-    $('#bayes-ci-hi').textContent  = fmtDiff(ci95Hi);   flash($('#bayes-ci-hi'));
-
-    // Verdict
-    const S = s(); const pct = pBbeatsA * 100;
-    let vText, vHtml;
-    if      (pct >= 95) { vText = S.bayesStrongB(pStr); vHtml = `<span class="sig-pill yes">${vText}</span>`; }
-    else if (pct >= 80) { vText = S.bayesModB(pStr);    vHtml = `<span style="color:var(--green);font-size:12px;font-weight:600">${vText}</span>`; }
-    else if (pct >= 60) { vText = S.bayesWeakB(pStr);   vHtml = `<span style="color:var(--ink-2);font-size:12px">${vText}</span>`; }
-    else if (pct >= 40) { vText = S.bayesTie(pStr);     vHtml = `<span style="color:var(--ink-3);font-size:12px">${vText}</span>`; }
-    else if (pct >= 20) { vText = S.bayesWeakA(pStr);   vHtml = `<span style="color:var(--ink-2);font-size:12px">${vText}</span>`; }
-    else if (pct >=  5) { vText = S.bayesModA(pStr);    vHtml = `<span style="color:var(--red);font-size:12px;font-weight:600">${vText}</span>`; }
-    else                { vText = S.bayesStrongA(pStr);  vHtml = `<span class="sig-pill no">${vText}</span>`; }
-    $('#bayes-verdict').innerHTML = vHtml;
-
-    drawBayesChart(_bayesResult);
-  }
-
-  function drawBayesChart(result) {
-    const canvas = document.getElementById('bayes-chart');
-    if (!canvas || !result) return;
-    const W = canvas.offsetWidth || 600, H = canvas.offsetHeight || 180;
-    if (!W || !H) return;
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width  = Math.round(W * dpr);
-    canvas.height = Math.round(H * dpr);
-    const ctx = canvas.getContext('2d');
-    ctx.scale(dpr, dpr);
-
-    const { diffs, ci95Lo, ci95Hi, pBbeatsA } = result;
-    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-    const green  = isDark ? [52,211,153]  : [5,150,105];
-    const red    = isDark ? [248,113,113] : [220,38,38];
-    const brand  = isDark ? [79,142,247]  : [37,99,235];
-    const rgba   = ([r,g,b], a) => `rgba(${r},${g},${b},${a})`;
-    const ink2   = _cssRgb('--ink-2');
-    const ink3   = _cssRgb('--ink-3');
-    const bdr    = _cssRgb('--border');
-
-    // Layout
-    const pad = { top: 28, right: 22, bottom: 34, left: 14 };
-    const pw = W - pad.left - pad.right, ph = H - pad.top - pad.bottom;
-    const baseY = pad.top + ph;
-
-    // Histogram bins
-    const nBins = 60;
-    const dMin = diffs[0], dMax = diffs[diffs.length-1];
-    const ext  = Math.max((dMax - dMin) * 0.03, 0.005);
-    const xMin = dMin - ext, xMax = dMax + ext;
-    const binW = (xMax - xMin) / nBins;
-    const counts = new Int32Array(nBins);
-    for (const d of diffs) {
-      const bi = Math.min(Math.floor((d - xMin) / binW), nBins - 1);
-      if (bi >= 0) counts[bi]++;
-    }
-    const maxC = Math.max(...counts, 1);
-    const toX  = v => pad.left + (v - xMin) / (xMax - xMin) * pw;
-    const toY  = c => pad.top + ph - (c / maxC) * ph;
-
-    // Draw bars
-    for (let i = 0; i < nBins; i++) {
-      const bMid  = xMin + (i + 0.5) * binW;
-      const inCI  = bMid >= ci95Lo && bMid <= ci95Hi;
-      const color = bMid >= 0 ? green : red;
-      ctx.fillStyle = rgba(color, inCI ? 0.78 : 0.25);
-      const x1 = toX(xMin + i * binW), x2 = toX(xMin + (i+1) * binW);
-      ctx.fillRect(x1, toY(counts[i]), Math.max(x2 - x1 - 0.8, 0.8), baseY - toY(counts[i]));
-    }
-
-    // X-axis line
-    ctx.beginPath(); ctx.strokeStyle = bdr; ctx.lineWidth = 1;
-    ctx.moveTo(pad.left, baseY); ctx.lineTo(pad.left + pw, baseY); ctx.stroke();
-
-    // Zero line
-    const x0 = toX(0);
-    if (x0 >= pad.left && x0 <= pad.left + pw) {
-      ctx.beginPath(); ctx.strokeStyle = ink2; ctx.lineWidth = 1.5;
-      ctx.moveTo(x0, pad.top + 4); ctx.lineTo(x0, baseY); ctx.stroke();
-    }
-
-    // CI dashed lines
-    ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
-    for (const v of [ci95Lo, ci95Hi]) {
-      const xv = toX(v);
-      if (xv < pad.left || xv > pad.left + pw) continue;
-      ctx.beginPath(); ctx.strokeStyle = rgba(brand, 0.65);
-      ctx.moveTo(xv, pad.top + 10); ctx.lineTo(xv, baseY); ctx.stroke();
-    }
-    ctx.setLineDash([]);
-
-    // X-axis labels — only the three meaningful values: CI lower, zero, CI upper
-    const fmtL = v => v === 0 ? '0' : ((v*100 >= 0 ? '+' : '') + (v*100).toFixed(1) + '%');
-    ctx.fillStyle = ink3; ctx.textBaseline = 'top'; ctx.font = `9.5px 'DM Mono', monospace`;
-    const ticks = [[ci95Lo, 'center'], [0, 'center'], [ci95Hi, 'center']];
-    for (const [v, align] of ticks) {
-      const xv = toX(v);
-      if (xv < pad.left + 2 || xv > pad.left + pw - 2) continue;
-      ctx.textAlign = align;
-      ctx.fillText(fmtL(v), xv, baseY + 5);
-    }
-
-    // Top annotations — area label on left, win-chance on right (opposite sides, no overlap)
-    const lblLang = lang();
-    ctx.textBaseline = 'top';
-    ctx.font = `italic 10px 'DM Sans', sans-serif`;
-    if (x0 > pad.left + 52) {
-      ctx.textAlign = 'left'; ctx.fillStyle = rgba(red, 0.55);
-      ctx.fillText(lblLang === 'fr' ? '← A en tête' : '← A winning', pad.left + 4, pad.top + 4);
-    }
-    ctx.font = `600 11px 'DM Sans', sans-serif`;
-    ctx.textAlign = 'right';
-    ctx.fillStyle = pBbeatsA >= 0.5 ? rgba(green, 0.9) : rgba(red, 0.9);
-    ctx.fillText((pBbeatsA * 100).toFixed(1) + (lblLang === 'fr' ? '% de chance que B gagne' : '% chance B wins'), pad.left + pw, pad.top + 4);
-  }
-
-  /* ══════════════════════════════════════════════════════
-     Compute — LOGIC UNCHANGED; display strings use i18n
-  ══════════════════════════════════════════════════════ */
-  function compute(){
-    const nA=Number($('#visA').value), xA=Number($('#convA').value),
-          nB=Number($('#visB').value), xB=Number($('#convB').value);
-    const errA=xA>nA||nA<0||xA<0, errB=xB>nB||nB<0||xB<0;
-    ['visA','convA','visB','convB'].forEach((id,i) => $('#'+id).classList.toggle('err', i<2?errA:errB));
-
-    if(errA||errB){
-      ['#rateA','#rateB','#lift','#winner','#improve','#sig95','#rec','#pooled','#se','#z','#p',
-       '#bayes-prob','#bayes-elift','#bayes-ci-lo','#bayes-ci-hi']
-        .forEach(id => $(id) && ($(id).textContent='—'));
-      $('#winner-desc').textContent = s().awaitDesc;
-      $('#bayes-verdict').innerHTML = '–';
-      $('#tbody').innerHTML=''; return;
-    }
-
-    const pA=nA>0?xA/nA:NaN, pB=nB>0?xB/nB:NaN;
-    $('#rateA').textContent=fmtPct(pA); flash($('#rateA'));
-    $('#rateB').textContent=fmtPct(pB); flash($('#rateB'));
-
-    const lift=(isFinite(pA)&&pA>0&&isFinite(pB))?(pB-pA)/pA:NaN;
-    const liftEl=$('#lift');
-    liftEl.textContent=isFinite(lift)?(100*lift).toFixed(2)+'%':'—';
-    liftEl.className='lift-value'+(isFinite(lift)?(lift>0?' positive':lift<0?' negative':''):'');
-    flash(liftEl);
-
-    const pooled=(nA+nB)>0?(xA+xB)/(nA+nB):NaN;
-    const se=(isFinite(pooled)&&pooled>0&&pooled<1&&nA>0&&nB>0)?Math.sqrt(pooled*(1-pooled)*(1/nA+1/nB)):NaN;
-    const z=(isFinite(se)&&se>0&&isFinite(pA)&&isFinite(pB))?(pB-pA)/se:0;
-    const pval=isFinite(z)?2*(1-phi(Math.abs(z))):NaN;
-
-    [$('#pooled'),$('#se'),$('#z'),$('#p')].forEach(flash);
-    $('#pooled').textContent=fmtPct(pooled);
-    $('#se').textContent=isFinite(se)?se.toFixed(4):'—';
-    $('#z').textContent=isFinite(z)?z.toFixed(2):'—';
-    $('#p').textContent=isFinite(pval)?pval.toFixed(4):'—';
-
-    const S=s();
-    const isTie=!isFinite(pA)||!isFinite(pB)||pA===pB;
-    const aWins=!isTie&&pA>pB;
-    const winnerName=isTie?S.tie:(aWins?S.vA:S.vB);
-
-    $('#winner-block').className='winner-block '+(isTie?'tie':(aWins?'version-a-wins':'version-b-wins'));
-    $('#winner-icon').textContent=isTie?'⚖️':(aWins?'🔵':'🟢');
-    $('#winner').textContent=winnerName;
-    const pct=isFinite(lift)?Math.abs(100*lift).toFixed(2):null;
-    $('#winner-desc').textContent=pct?(lift>=0?S.higherRate(pct):S.lowerRate(pct)):S.equalRate;
-
-    $('#improve').textContent=isFinite(lift)?(100*lift).toFixed(2)+'%':'—';
-    flash($('#improve'));
-
-    const sig=isFinite(pval)&&pval<0.05;
-    $('#sig95').innerHTML=sig
-      ?`<span class="sig-pill yes">${S.sigYes}</span>`
-      :`<span class="sig-pill no">${S.sigNo}</span>`;
-    $('#rec').textContent=sig?S.adoptWinner:S.moreData;
-
-    const tbody=$('#tbody'); tbody.innerHTML='';
-    for(const conf of [0.80,0.90,0.95,0.99]){
-      const chance=1-conf, pct100=Math.round(conf*100), chance100=Math.round(chance*100);
-      const significant=isFinite(pval)&&pval<chance;
-      const who=isTie?S.whoTie:(aWins?S.whoA:S.whoB);
-      const interp=significant?S.rowSig(pct100,chance100,who):S.rowNot(pct100,chance100);
-      const tr=document.createElement('tr');
-      const td1=document.createElement('td'); td1.textContent=`${pct100}%`;
-      const td2=document.createElement('td');
-      td2.innerHTML=significant
-        ?`<span class="tsig ok">${S.tsigYes(pct100)}</span>`
-        :`<span class="tsig no">${S.tsigNo()}</span>`;
-      const td3=document.createElement('td'); td3.textContent=interp;
-      tr.append(td1,td2,td3); tbody.appendChild(tr);
-    }
-    computeBayes();
-  }
-
-  /* ══════════════════════════════════════════════════════
-     Event listeners — UNCHANGED
-  ══════════════════════════════════════════════════════ */
-  ['#visA','#convA','#visB','#convB'].forEach(id => $(id).addEventListener('input', compute));
-  $('#reset').addEventListener('click', ()=>{
-    $('#visA').value=0; $('#convA').value=0;
-    $('#visB').value=0; $('#convB').value=0;
-    compute();
-  });
-
-  /* ══════════════════════════════════════════════════════
-     Init
-  ══════════════════════════════════════════════════════ */
-  wireHoverTooltips();
-  compute();
-
-  // Redraw Bayesian chart when theme or language changes
-  $('#theme-toggle').addEventListener('click', () => {
-    if (_bayesResult) requestAnimationFrame(() => drawBayesChart(_bayesResult));
-  });
-  $('#lang-toggle').addEventListener('click', () => {
-    if (_bayesResult) requestAnimationFrame(() => drawBayesChart(_bayesResult));
-  });
-  window.addEventListener('resize', () => {
-    if (_bayesResult) requestAnimationFrame(() => drawBayesChart(_bayesResult));
+  document.getElementById('lang-toggle').addEventListener('click', () => {
+    const newLang = lang() === 'en' ? 'fr' : 'en';
+    html.setAttribute('data-lang', newLang);
+    html.setAttribute('lang', newLang);
+    localStorage.setItem('ca-analytics-lang', newLang);
   });
 </script>
 </body>
