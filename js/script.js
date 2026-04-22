@@ -163,7 +163,7 @@ function compute() {
   $('#pooled').textContent = fmtPct(pooled);
   $('#se').textContent     = isFinite(se)   ? se.toFixed(4)   : '—';
   $('#z').textContent      = isFinite(z)    ? z.toFixed(2)    : '—';
-  $('#p').textContent      = isFinite(pval) ? pval.toFixed(4) : '—';
+  $('#p').textContent      = isFinite(pval) ? (pval < 0.0001 ? '< 0.0001' : pval.toFixed(4)) : '—';
   const S = s(), isTie = !isFinite(pA)||!isFinite(pB)||pA===pB, aWins = !isTie&&pA>pB;
   $('#winner-block').className = 'winner-block '+(isTie?'tie':(aWins?'version-a-wins':'version-b-wins'));
   $('#winner').textContent = isTie?S.tie:(aWins?S.vA:S.vB);
