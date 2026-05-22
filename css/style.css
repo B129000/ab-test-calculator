@@ -280,6 +280,13 @@ input[type=number].err { border-color: rgba(220,38,38,.5); background: rgba(220,
 .tsig.ok { color: var(--green); }
 .tsig.no { color: var(--red); }
 .tsig::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+@media (max-width: 1500px) {
+  .interp-table { min-width: 1180px; }
+  .interp-table td:nth-child(3),
+  .interp-table td:nth-child(5) {
+    white-space: normal;
+  }
+}
 
 /* ── Tooltips ── */
 .tt { position: relative; border-bottom: 0; cursor: help; }
