@@ -3,42 +3,29 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>A/B Test Calculator — Canada.ca Analytics</title>
+  <title>A/B Test Statistical Significance Calculator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-  <!-- ══ Site bar ══ -->
-  <div class="site-bar" role="banner">
-    <div class="site-bar-inner">
-      <a href="index.html" class="site-wordmark">
-        <span class="site-name-secondary" data-i18n-en>Canada.ca Analytics</span>
-        <span class="site-name-secondary" data-i18n-fr>Analytiques Canada.ca</span>
-      </a>
-      <div class="controls">
-        <button class="toggle-btn" id="lang-toggle" aria-label="Changer de langue / Switch language">
-          <span class="lbl-to-fr">FR</span>
-          <span class="lbl-to-en">EN</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- ══ Main content ══ -->
   <div class="container">
 
-<!-- ══ Tool: A/B Test Calculator ══ -->
+<!-- ══ Tool: Statistical significance calculator ══ -->
     <div class="tool-section" id="ab-test-calculator">
 
       <div class="tool-section-header">
-        <span class="tool-tag" data-i18n-en>Analytics tool</span>
-        <span class="tool-tag" data-i18n-fr>Outil d'analyse</span>
-        <h1 data-i18n-en>A/B Test Calculator</h1>
-        <h1 data-i18n-fr>Calculateur de test A/B</h1>
-        <p data-i18n-en>Enter visitor and conversion data for two versions. Get a statistical comparison to support your decision.</p>
-        <p data-i18n-fr>Saisissez les données de visiteurs et de conversions pour deux versions. Obtenez une comparaison statistique pour appuyer votre décision.</p>
+        <div class="tool-section-title">
+          <h1 data-i18n-en>A/B Test Statistical Significance Calculator</h1>
+          <h1 data-i18n-fr>Calculateur de signification statistique de test A/B</h1>
+          <p data-i18n-en>Enter visitor and conversion data for two versions. Get a statistical comparison to support your decision.</p>
+          <p data-i18n-fr>Saisissez les données de visiteurs et de conversions pour deux versions. Obtenez une comparaison statistique pour appuyer votre décision.</p>
+        </div>
+        <button class="language-toggle" id="lang-toggle" type="button" aria-label="Changer de langue / Switch language">
+          <span class="lbl-to-fr">Français</span>
+          <span class="lbl-to-en">EN</span>
+        </button>
       </div>
 
       <!-- ══ Inputs ══ -->
@@ -55,11 +42,7 @@
           <div class="version-fields">
             <div class="field">
               <label class="field-label" for="visA">
-                <span class="tt" tabindex="0"
-                  data-tip-title-en="Number of visitors"  data-tip-en="Total number of users who saw this version of the page."
-                  data-tip-title-fr="Nombre de visiteurs" data-tip-fr="Nombre total d'utilisateurs ayant vu cette version de la page.">
-                  <span data-i18n-en>Number of visitors</span><span data-i18n-fr>Nombre de visiteurs</span>
-                </span>
+                <span data-i18n-en>Number of visitors</span><span data-i18n-fr>Nombre de visiteurs</span>
               </label>
               <input id="visA" name="visA" type="number" inputmode="numeric" min="0" step="1" value="0"/>
               <span class="field-hint" data-i18n-en>Total visitors who saw this version</span>
@@ -67,11 +50,7 @@
             </div>
             <div class="field">
               <label class="field-label" for="convA">
-                <span class="tt" tabindex="0"
-                  data-tip-title-en="Number of conversions" data-tip-en="Number of users who completed the goal — for example, a click, sign-up, or purchase."
-                  data-tip-title-fr="Nombre de conversions" data-tip-fr="Nombre d'utilisateurs ayant atteint l'objectif — par exemple, un clic, une inscription ou un achat.">
-                  <span data-i18n-en>Number of conversions</span><span data-i18n-fr>Nombre de conversions</span>
-                </span>
+                <span data-i18n-en>Number of conversions</span><span data-i18n-fr>Nombre de conversions</span>
               </label>
               <input id="convA" name="convA" type="number" inputmode="numeric" min="0" step="1" value="0"/>
               <span class="field-hint" data-i18n-en>Visitors who completed the goal</span>
@@ -96,11 +75,7 @@
           <div class="version-fields">
             <div class="field">
               <label class="field-label" for="visB">
-                <span class="tt" tabindex="0"
-                  data-tip-title-en="Number of visitors"  data-tip-en="Total number of users who saw this version of the page."
-                  data-tip-title-fr="Nombre de visiteurs" data-tip-fr="Nombre total d'utilisateurs ayant vu cette version de la page.">
-                  <span data-i18n-en>Number of visitors</span><span data-i18n-fr>Nombre de visiteurs</span>
-                </span>
+                <span data-i18n-en>Number of visitors</span><span data-i18n-fr>Nombre de visiteurs</span>
               </label>
               <input id="visB" name="visB" type="number" inputmode="numeric" min="0" step="1" value="0"/>
               <span class="field-hint" data-i18n-en>Total visitors who saw this version</span>
@@ -108,11 +83,7 @@
             </div>
             <div class="field">
               <label class="field-label" for="convB">
-                <span class="tt" tabindex="0"
-                  data-tip-title-en="Number of conversions" data-tip-en="Number of users who completed the goal — for example, a click, sign-up, or purchase."
-                  data-tip-title-fr="Nombre de conversions" data-tip-fr="Nombre d'utilisateurs ayant atteint l'objectif — par exemple, un clic, une inscription ou un achat.">
-                  <span data-i18n-en>Number of conversions</span><span data-i18n-fr>Nombre de conversions</span>
-                </span>
+                <span data-i18n-en>Number of conversions</span><span data-i18n-fr>Nombre de conversions</span>
               </label>
               <input id="convB" name="convB" type="number" inputmode="numeric" min="0" step="1" value="0"/>
               <span class="field-hint" data-i18n-en>Visitors who completed the goal</span>
@@ -132,7 +103,6 @@
 
         <section class="section card">
           <div class="card-header">
-            <div class="card-icon blue">▲</div>
             <span class="card-title" data-i18n-en>Results summary</span>
             <span class="card-title" data-i18n-fr>Résumé des résultats</span>
           </div>
@@ -169,8 +139,8 @@
             </div>
             <details class="adv-details">
               <summary>
-                <span data-i18n-en>&nbsp;Advanced details</span>
-                <span data-i18n-fr>&nbsp;Détails avancés</span>
+                <span data-i18n-en>&nbsp;Statistical Details</span>
+                <span data-i18n-fr>&nbsp;Détails statistiques</span>
               </summary>
               <div class="stat-grid">
                 <div class="stat-cell">
@@ -254,8 +224,8 @@
               <tbody id="tbody"></tbody>
             </table>
           </div>
-          <div style="padding:13px 18px;border-top:1px solid var(--border)">
-            <p id="interphelp" style="font-size:13px;color:var(--ink-3);line-height:1.6">
+          <div class="interp-help">
+            <p id="interphelp">
               <span data-i18n-en>Confidence level tells you how certain you can be that the difference is real. At 95% confidence, there is only a 5% chance the result happened at random.</span>
               <span data-i18n-fr>Le niveau de confiance indique à quel point vous pouvez être certain que la différence est réelle. À 95 % de confiance, il n'y a que 5 % de chance que le résultat soit dû au hasard.</span>
             </p>

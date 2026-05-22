@@ -1,6 +1,6 @@
-# A/B Test Calculator — Canada.ca Analytics
+# A/B Test Statistical Significance Calculator
 
-A browser-based, zero-dependency A/B test calculator for government employees. Enter visitor and conversion counts for two page variants; the tool computes conversion rates, statistical significance, and plain-language guidance — in English and French.
+A browser-based, zero-dependency A/B test calculator. Enter visitor and conversion counts for two page variants; the tool computes conversion rates, statistical significance, and plain-language guidance.
 
 ---
 
@@ -23,7 +23,7 @@ The file runs directly from `file://`. The only external request is the Google F
 - **Two-proportion z-test** — standard frequentist test for comparing two conversion rates
 - **Four confidence levels** — 80%, 90%, 95%, 99%, each explained in plain language with "when to use" guidance
 - **Live calculation** — results update on every keystroke, no submit button
-- **Bilingual** — full EN/FR toggle; preference persisted to `localStorage`
+- **Plain-language interface** — statistical results and guidance written for non-technical users
 - **Hover/focus tooltips** — every statistical term explained inline, designed for non-technical users
 - **No dependencies** — single HTML file, runs anywhere a browser can open a file
 
@@ -51,7 +51,7 @@ Inputs (4 numbers)
 Outputs
   ├── Winner block — which version leads and by how much
   ├── Relative improvement + absolute difference in pp
-  ├── Advanced details panel — pooled proportion, SE, z-score, p-value
+  ├── Statistical details panel — pooled proportion, SE, z-score, p-value
   └── Significance table — 4 rows for 80% / 90% / 95% / 99% confidence
 ```
 
@@ -68,8 +68,6 @@ ab-test-calculator/
 │   └── style.css     # All styles — CSS custom properties (theme), layout, components
 ├── js/
 │   └── script.js     # All logic — STRINGS (i18n), statistical math, DOM updates
-├── assets/
-│   └── sig-blk-en.svg  # Government of Canada wordmark asset
 └── README.md
 ```
 
@@ -180,7 +178,7 @@ CSS hides the inactive language automatically via `[data-lang]` on `<html>`.
 ## Key design decisions
 
 **Single HTML file**
-No build step, no Node, no pipeline. The audience needed something shareable as a file attachment, hostable on GitHub Pages without infrastructure, and openable on government machines that may block package installs. The tradeoff: the file grows unwieldy past ~1,000 lines. If the tool expands significantly, split into separate `.css` and `.js` files.
+No build step, no Node, no pipeline. The audience needed something shareable as a file attachment, hostable on GitHub Pages without infrastructure, and openable in browsers that may block package installs. The tradeoff: the file grows unwieldy past ~1,000 lines. If the tool expands significantly, split into separate `.css` and `.js` files.
 
 **Two-proportion z-test, not Bayesian**
 Bayesian A/B testing gives more intuitive output ("probability that B beats A") and handles sequential testing better. It was excluded because:
@@ -273,13 +271,12 @@ For |z| > 6 the polynomial approximation degrades. In practice, if z exceeds 6 t
 **Handle with care:**
 - `phi()` — do not rewrite without verifying `phi(1.96) ≈ 0.97500` and `phi(0) = 0.5`
 - `compute()` NaN propagation — do not add default fallback values of `0` for missing inputs; that silently produces wrong results
-- CSS i18n toggle — do not add inline `display:` styles to elements with `data-i18n-en` or `data-i18n-fr`; it will break the language switch
-- `localStorage` key `'ca-analytics-lang'` — if you rename it, existing user preferences will reset to English
+- CSS i18n rules — do not add inline `display:` styles to elements with `data-i18n-en` or `data-i18n-fr`; it will break language-specific rendering
 
 **Recommended next improvements (priority order):**
 1. **Sample size warning** — show a caution when either group has fewer than ~100 visitors; this addresses the most common misuse
 2. **Extract math from `compute()`** — separate the pure statistical calculation from the DOM updates so the logic can be unit tested independently
-3. **`<noscript>` fallback** — currently a blank page for users with JS disabled; some government IT environments restrict scripting
+3. **`<noscript>` fallback** — currently a blank page for users with JS disabled
 
 ---
 
@@ -293,7 +290,7 @@ For |z| > 6 the polynomial approximation degrades. In practice, if z exceeds 6 t
 
 **[0:00 – 0:30] What this is**
 
-"This is the A/B Test Calculator for Canada.ca analytics. It's a single HTML file — no install, no server — that helps non-technical government employees evaluate experiment results without needing to understand the statistics."
+"This is the A/B Test Statistical Significance Calculator. It's a single HTML file — no install, no server — that helps non-technical users evaluate experiment results without needing to understand the statistics."
 
 "You open `index.html` in any browser. That's the full deployment."
 
@@ -323,9 +320,9 @@ For |z| > 6 the polynomial approximation degrades. In practice, if z exceeds 6 t
 
 ---
 
-**[2:30 – 3:15] Advanced details**
+**[2:30 – 3:15] Statistical details**
 
-"For anyone who wants the raw numbers, click Advanced Details."
+"For anyone who wants the raw numbers, click Statistical Details."
 
 *[Click to expand.]*
 

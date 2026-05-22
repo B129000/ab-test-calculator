@@ -3,6 +3,7 @@ const STRINGS = {
     tie:        'Tie — no clear winner',
     vA:         'Version A (Control) leads',
     vB:         'Version B (Variant) leads',
+    empty:      'Please input the required data above',
     awaitDesc:  'Enter your data',
     higherRate: p => `${p}% higher conversion rate`,
     lowerRate:  p => `${p}% lower conversion rate`,
@@ -28,6 +29,7 @@ const STRINGS = {
     tie:        'Égalité — pas de gagnant clair',
     vA:         'Version A (Témoin) en tête',
     vB:         'Version B (Variante) en tête',
+    empty:      'Veuillez saisir les données requises ci-dessus',
     awaitDesc:  'Entrez vos données',
     higherRate: p => `Taux de conversion ${p} % plus élevé`,
     lowerRate:  p => `Taux de conversion ${p} % plus bas`,
@@ -59,8 +61,8 @@ const fmtPct = (x, dp=2) => isFinite(x) ? (100*x).toFixed(dp) + '%' : '—';
 
 /* ── Apply saved language preference ── */
 (function() {
-  const saved = localStorage.getItem('ca-analytics-lang');
-  if (saved && saved !== lang()) {
+  const saved = localStorage.getItem('ab-test-calculator-lang');
+  if (saved === 'en' || saved === 'fr') {
     html.setAttribute('data-lang', saved);
     html.setAttribute('lang', saved);
   }
@@ -108,11 +110,10 @@ function wireHoverTooltips() {
 }
 
 $('#lang-toggle').addEventListener('click', () => {
-  const isFr = lang() === 'fr';
-  const newLang = isFr ? 'en' : 'fr';
+  const newLang = lang() === 'fr' ? 'en' : 'fr';
   html.setAttribute('data-lang', newLang);
   html.setAttribute('lang', newLang);
-  localStorage.setItem('ca-analytics-lang', newLang);
+  localStorage.setItem('ab-test-calculator-lang', newLang);
   compute();
 });
 
@@ -157,18 +158,17 @@ function compute() {
   const pooled = (nA+nB) > 0 ? (xA+xB)/(nA+nB) : NaN;
   const se     = (isFinite(pooled) && pooled > 0 && pooled < 1 && nA > 0 && nB > 0)
                  ? Math.sqrt(pooled*(1-pooled)*(1/nA+1/nB)) : NaN;
-  const z      = (isFinite(se) && se > 0 && isFinite(pA) && isFinite(pB)) ? (pB-pA)/se : 0;
+  const z      = (isFinite(se) && se > 0 && isFinite(pA) && isFinite(pB)) ? (pB-pA)/se : NaN;
   const pval   = isFinite(z) ? 2*(1-phi(Math.abs(z))) : NaN;
   [$('#pooled'),$('#se'),$('#z'),$('#p')].forEach(flash);
   $('#pooled').textContent = fmtPct(pooled);
   $('#se').textContent     = isFinite(se)   ? se.toFixed(4)   : '—';
   $('#z').textContent      = isFinite(z)    ? z.toFixed(2)    : '—';
   $('#p').textContent      = isFinite(pval) ? (pval < 0.0001 ? '< 0.0001' : pval.toFixed(4)) : '—';
-  const S = s(), isTie = !isFinite(pA)||!isFinite(pB)||pA===pB, aWins = !isTie&&pA>pB;
-  $('#winner-block').className = 'winner-block '+(isTie?'tie':(aWins?'version-a-wins':'version-b-wins'));
-  $('#winner').textContent = isTie?S.tie:(aWins?S.vA:S.vB);
-  const pct = isFinite(lift) ? Math.abs(100*lift).toFixed(2) : null;
-  $('#winner-desc').textContent = pct ? (lift>=0?S.higherRate(pct):S.lowerRate(pct)) : S.equalRate;
+  const S = s(), hasData = nA > 0 && nB > 0, isEmpty = !hasData, isTie = !isEmpty&&pA===pB, aWins = !isEmpty&&!isTie&&pA>pB;
+  $('#winner-block').className = 'winner-block '+((isEmpty||isTie)?'tie':(aWins?'version-a-wins':'version-b-wins'));
+  $('#winner').textContent = isEmpty?S.empty:(isTie?S.tie:(aWins?S.vA:S.vB));
+  $('#winner-desc').textContent = '';
   const tbody = $('#tbody');
   tbody.innerHTML = '';
   for (const conf of [0.80,0.90,0.95,0.99]) {
