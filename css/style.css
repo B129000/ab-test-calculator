@@ -280,9 +280,19 @@ input[type=number].err { border-color: rgba(220,38,38,.5); background: rgba(220,
 .tsig.ok { color: var(--green); }
 .tsig.no { color: var(--red); }
 .tsig::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
-@media (max-width: 1500px) {
-  .interp-table { min-width: 1180px; }
+@media (max-width: 1800px) {
+  .interp-table {
+    min-width: 1080px;
+    table-layout: fixed;
+  }
+  .interp-table th:nth-child(1),
+  .interp-table td:nth-child(1) { width: 96px; }
+  .interp-table th:nth-child(2),
+  .interp-table td:nth-child(2) { width: 150px; }
+  .interp-table th:nth-child(4),
+  .interp-table td:nth-child(4) { width: 210px; }
   .interp-table td:nth-child(3),
+  .interp-table td:nth-child(4),
   .interp-table td:nth-child(5) {
     white-space: normal;
   }
